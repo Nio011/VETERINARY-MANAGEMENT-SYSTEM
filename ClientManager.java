@@ -5,6 +5,8 @@ import java.util.*;
 
 //tama na plss
 
+//4.0 na this
+
 public class ClientManager implements AdminActions {
 
         public static Client lastAddedClient;

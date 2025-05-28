@@ -1,1 +1,3 @@
-null | Neomi  | Dobby | Dog | Japanese Spitz | 12/02/2023 | 1 year(s), 5 month(s), and 26 day(s) | 12.5 kg
+null| Alec |kyle|Cat|persian|05/05/2005|20 year(s), 0 month(s), and 23 day(s)|5.0
+null |  Alec  | Kyla | Dog | Bulldog | 06/06/2024 | 0 year(s), 11 month(s), and 22 day(s) | 2.0
+null|Ken|Takeda|Cat|Persian|05/29/2023|1 year(s), 11 month(s), and 29 day(s)|2.0

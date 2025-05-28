@@ -4,10 +4,6 @@ import java.util.Scanner;
 
 public class DashboardModule {
 
-    LocalDateTime now = LocalDateTime.now();
-    DateTimeFormatter format = DateTimeFormatter.ofPattern("MM dd, yyyy | hh:mm a");
-    String formattedDateTime = now.format(format);
-
     public void moduleChoice(){
         Scanner c = new Scanner(System.in);
         System.out.println("1. Clients");
@@ -49,11 +45,15 @@ public class DashboardModule {
 
     public void showDashboard(){
 
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("MM dd, yyyy | hh:mm a");
+        String formattedDateTime = now.format(format);
+
         System.out.println("VETERINARY MANAGEMENT SYSTEM");
         System.out.println("ADMIN DASHBOARD");
         System.out.println("DATE & TIME: " + formattedDateTime);
         System.out.println();
-
+        
         System.out.println("System Overview");
         System.out.println("TOTAL CLIENTS: ");
         System.out.println("TODAY'S APPOINTMENT: ");
