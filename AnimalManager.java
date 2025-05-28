@@ -77,7 +77,7 @@ public class AnimalManager implements AdminActions {
             String species = sc.nextLine();
             System.out.print("Enter Breed: ");
             String breed = sc.nextLine();
-            System.out.print("Enter Date of Birth (MM/dd/YYYY): ");
+            System.out.print("Enter Date of Birth (YYYY-MM-dd): ");
             LocalDate dob = LocalDate.parse(sc.nextLine());
             System.out.print("Enter Weight (kg): ");
             double weight = Double.parseDouble(sc.nextLine());
