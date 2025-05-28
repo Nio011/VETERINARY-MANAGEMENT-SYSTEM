@@ -8,14 +8,15 @@ import java.time.format.ResolverStyle;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class AppointmentClient {
+public class AppointmentClient{
 
-    public void bookAppointment() {
+   public void static bookAppointment() {
         Scanner scanner = new Scanner(System.in);
         String clientId;
         String name;
         String species;
         String contactNum;
+        String reason;
 
         // Initialize appointments file with header if empty
         try {
@@ -41,7 +42,7 @@ public class AppointmentClient {
                 clientId = clientData[0];
                 name = clientData[1];
                 contactNum = clientData[2];
-                System.out.println("Client found!");
+                System.out.println("Client found! Auto-filled details:");
                 System.out.println("ID: " + clientId);
                 System.out.println("Name: " + name);
                 System.out.println("Contact Number: " + contactNum);
@@ -61,7 +62,7 @@ public class AppointmentClient {
                 System.out.print("Enter Species: ");
                 species = scanner.nextLine().trim();
 
-                // For new client, enter contact number now with validation
+                // For new client, enter contact number now
                 while (true) {
                     System.out.print("Enter Contact Number (11 digits): ");
                     contactNum = scanner.nextLine().trim();
@@ -99,10 +100,10 @@ public class AppointmentClient {
                     time = scanner.nextLine().trim().toUpperCase();
 
                     DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                            .parseCaseInsensitive()
-                            .appendPattern("hh:mm a")
-                            .toFormatter(Locale.ENGLISH)
-                            .withResolverStyle(ResolverStyle.STRICT);
+                        .parseCaseInsensitive()
+                        .appendPattern("hh:mm a")
+                        .toFormatter(Locale.ENGLISH)
+                        .withResolverStyle(ResolverStyle.STRICT);
 
                     LocalTime enteredTime = LocalTime.parse(time, formatter);
                     LocalTime opening = LocalTime.of(8, 0);
@@ -126,7 +127,7 @@ public class AppointmentClient {
 
             // Build appointment record
             String record = clientId + " | " + name + " | " + species + " | " +
-                    date + " | " + time + " | " + contactNum + " | " + reason;
+                            date + " | " + time + " | " + contactNum + " | " + reason;
 
             // Append appointment record to file
             try (FileWriter apptWriter = new FileWriter("appointments.txt", true)) {
@@ -160,10 +161,10 @@ public class AppointmentClient {
                 if (data.length >= 4) {
                     String fileName = data[1].trim();
                     if (fileName.equalsIgnoreCase(nameInput.trim())) {
-                        return new String[]{
-                                data[0].trim(),  // ID
-                                data[1].trim(),  // Name
-                                data[3].trim()   // Contact Number
+                        return new String[] {
+                            data[0].trim(),  // ID
+                            data[1].trim(),  // Name
+                            data[3].trim()   // Contact Number
                         };
                     }
                 } else {

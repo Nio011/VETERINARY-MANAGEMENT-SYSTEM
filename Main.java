@@ -17,10 +17,7 @@ public class Main {
         if (choice.equals("1")){
             LoginManager lm = new LoginManager(admin, sc);
             lm.loggingIn();
-
-        } else if(choice.equals("2")){
-            AppointmentModule Am = new AppointmentModule();
-            Am.bookAppointment();
+            
         } else {
             System.out.println ("Invalid Choice");
         }

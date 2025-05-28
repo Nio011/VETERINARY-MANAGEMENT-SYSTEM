@@ -6,8 +6,9 @@ public class Appointment {
     private String appTime; 
     private String contactNum;
     private String reason;
+    private String status;
 
-    public Appointment(String id, String name, String breed, String date, String appTime, String contactNum, String reason){
+    public Appointment(String id, String name, String breed, String date, String appTime, String contactNum, String reason, String status){
         this.id = id;
         this.name = name;
         this.breed = breed;
@@ -15,6 +16,8 @@ public class Appointment {
         this.appTime = appTime;
         this.contactNum = contactNum;
         this.reason = reason;
+        this.status = status;
+
 
 
 }
@@ -45,6 +48,22 @@ public class Appointment {
 
     public String getReason() {
         return reason;
+    }
+
+    public String getStatus(){
+        return status;
+    }
+
+    public void setDate(String trim) {
+        this.date = trim;
+    }
+
+    public void setAppTime(String nextLine) {
+        this.appTime = nextLine;
+    }
+
+    public void setStatus(String nextLine) {
+        this.status = nextLine;
     }
 
 }
