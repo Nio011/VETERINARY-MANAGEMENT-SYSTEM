@@ -1,2 +1,4 @@
 Appointments
 CLT002 | Alex | Cat | 3:00 | Surgery 
+NEW | Ken | Cat | 2025-06-09 | 12:30 | 09087654321 | Surgery
+CLT002 | Alex | 0909888776654 | 2025 | 22 | 000 | Surgery 
