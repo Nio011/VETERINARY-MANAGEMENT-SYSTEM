@@ -33,8 +33,8 @@ public abstract class Animal {
         return petName;
     }
 
-    public String getBreed() {
-        return breed;
+    public String getSpecies() {
+        return species;
     }
 
     public String getAge() {
@@ -45,7 +45,7 @@ public abstract class Animal {
 
  @Override
     public String toString() {
-        return id + ", " + name + ", " + petName + ", " + breed;
+        return id + ", " + name + ", " + petName + ", " + species;
     }
     public abstract String toFileString();
 
