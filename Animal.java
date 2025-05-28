@@ -3,15 +3,16 @@ import java.time.Period;
 
 
 public abstract class Animal {
-    String id; // Client ID generated
-    String name; //name of client
-    String petName;
-    String species;
-    String breed;
-    LocalDate dateOfBirth;
-    double weight;
+    private String id; // Client ID generated
+    private String name; //name of client
+    private String petName;
+    private String species;
+    private String breed;
+    private LocalDate dateOfBirth;
+    private double weight;
 
     public Animal(String id, String name, String petName, String species, String breed, LocalDate dateOfBirth, double weight) {
+        this.id = id;
         this.name = name;
         this.petName = petName;
         this.species = species;
@@ -20,12 +21,32 @@ public abstract class Animal {
         this.weight = weight;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPetName() {
+        return petName;
+    }
+
+    public String getBreed() {
+        return breed;
+    }
+
     public String getAge() {
         LocalDate now = LocalDate.now();
         Period age = Period.between(dateOfBirth, now);
         return age.getYears() + " year(s), " + age.getMonths() + " month(s), and " + age.getDays() + " day(s)";
     }
 
+ @Override
+    public String toString() {
+        return id + ", " + name + ", " + petName + ", " + breed;
+    }
     public abstract String toFileString();
 
 }
