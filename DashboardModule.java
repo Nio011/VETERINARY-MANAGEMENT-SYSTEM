@@ -43,7 +43,8 @@ public class DashboardModule {
         }
     }
 
-    public void showDashboard(){
+        public void showDashboard() {
+        
 
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("MM dd, yyyy | hh:mm a");
@@ -53,12 +54,11 @@ public class DashboardModule {
         System.out.println("ADMIN DASHBOARD");
         System.out.println("DATE & TIME: " + formattedDateTime);
         System.out.println();
-        
+
         System.out.println("System Overview");
         System.out.println("TOTAL CLIENTS: ");
-        System.out.println("TODAY'S APPOINTMENT: ");
-        System.out.println("PENDING APPOINTMENTS: ");
-        System.out.println("TOTAL SALES: ");
+        System.out.println("TODAY'S APPOINTMENTS: " ); 
+        System.out.println("TOTAL SALES: "); 
         System.out.println();
 
         System.out.println("MENU");
