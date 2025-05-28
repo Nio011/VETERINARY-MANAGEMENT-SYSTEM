@@ -2,9 +2,6 @@ import java.io.*;
 import java.util.*;
 
 //okay na to
-
-//tama na plss
-
 public class ClientManager implements AdminActions {
 
         public static Client lastAddedClient;
