@@ -9,6 +9,6 @@ class Cat extends Animal {
     @Override
     public String toFileString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        return id + "|" + name + "|" + petName + "|" + species + "|" + breed + "|" + dateOfBirth.format(formatter) + "|" + getAge() + "|" + weight;
+        return getId() + "|" + getName() + "|" + getPetName() + "|" + getSpecies() + "|" + breed + "|" + dateOfBirth.format(formatter) + "|" + getAge() + "|" + weight;
     }
 }

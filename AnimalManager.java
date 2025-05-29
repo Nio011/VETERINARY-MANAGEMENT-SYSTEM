@@ -40,11 +40,13 @@ public class AnimalManager implements AdminActions {
                 } else if (species.equalsIgnoreCase("Cat")) {
                     animal = new Cat(id, name, petName, breed, dob, weight);
                 } else {
-                    System.out.println("Animal not supported");
+                    System.out.println("Animal not supported" + species);
                 }
+                if (animal != null) {
                 animals.add(animal);
             }
         }
+    }
         reader.close();
     }
 
@@ -61,12 +63,13 @@ public class AnimalManager implements AdminActions {
 
 @Override
     public void add() {
-            if (ClientManager.lastAddedClient == null) {
+            if (ClientManager.lastAddedClient == null()) {
                 System.out.println("No client found. Please add a client first.");
             return;
     }
 
             String clientId = ClientManager.lastAddedClient.getId();
+            System.out.println("Client ID: " + clientId);
             String clientName = ClientManager.lastAddedClient.getName();
 
             System.out.println("Adding pet for: " + clientName + " (ID: " + clientId + ")");
@@ -83,19 +86,19 @@ public class AnimalManager implements AdminActions {
             double weight = Double.parseDouble(sc.nextLine());
 
             Animal animal;
-            if (species.equalsIgnoreCase("Dog")) {
+        if (species.equalsIgnoreCase("Dog")) {
             animal = new Dog(clientId, clientName, petName, breed, dob, weight);
-            } else if (species.equalsIgnoreCase("Cat")) {
+        } else if (species.equalsIgnoreCase("Cat")) {
             animal = new Cat(clientId, clientName, petName, breed, dob, weight);
-            } else {
-                System.out.println("Unsupported Species");
-                return;
-            }
+        } else {
+            System.out.println("Unsupported Species");
+            return;
+        }
 
             animals.add(animal);
             saveAnimalToFile(animal);
             System.out.println("Pet added to " + clientName);
-}
+        }
 
 
     @Override
@@ -129,7 +132,5 @@ public class AnimalManager implements AdminActions {
             for (Animal animal : animals) {
             System.out.println(animal);
     }
-    }
-
-
+}
 }
