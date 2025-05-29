@@ -10,7 +10,6 @@ public class Main {
 
         System.out.println("Welcome to Veterinary Management System!");
         System.out.println("1. Log In");
-        System.out.println("2. Book Now!");
         System.out.println("Choose an option");
         choice = sc.nextLine();
 

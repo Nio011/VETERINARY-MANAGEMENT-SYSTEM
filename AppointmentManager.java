@@ -1,186 +1,146 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.*;
+import java.util.*;
 
-public class AppointmentManager implements AdminActions {
+public class AppointmentManager {
 
-    private static List<Appointment> appointments = new ArrayList<>();
-    private Scanner sc = new Scanner(System.in);
+    private final String fileName = "appointments.txt";
+    private List<Appointment> appointments;
 
-
-    static {
-        try {
-            loadAppointmentsFromFile();
-        } catch (IOException e) {
-            System.out.println("An unexpected error occurred. Could not load appointments at the moment: " + e.getMessage());
-        }
+    public AppointmentManager() {
+        appointments = new ArrayList<>();
+        loadAppointmentsFromFile();
     }
 
-    private static void loadAppointmentsFromFile() throws IOException {
-        File file = new File("appointments.txt");
-        if (!file.exists()) return;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            appointments.clear();
-
+    private void loadAppointmentsFromFile() {
+        appointments.clear();
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line = br.readLine(); // Skip header line
             while ((line = br.readLine()) != null) {
-                String[] parts = line.split(" \\| ");
-                if (parts.length == 8) {
-                    Appointment appointment = new Appointment(
-                        parts[0], parts[1], parts[2],
-                        parts[3], parts[4], parts[5], parts[6], parts[7]
+                String[] data = line.split("\\|");
+                if (data.length >= 7) {
+                    Appointment appt = new Appointment(
+                        data[0].trim(),
+                        data[1].trim(),
+                        data[2].trim(),
+                        data[3].trim(),
+                        data[4].trim(),
+                        data[5].trim(),
+                        data[6].trim()
                     );
-                    appointments.add(appointment);
+                    appointments.add(appt);
                 }
             }
+        } catch (FileNotFoundException e) {
+            // If file doesn't exist yet, it's fine — start fresh.
+        } catch (IOException e) {
+            System.out.println("Error loading appointments: " + e.getMessage());
         }
     }
 
-    public void saveAppointmentsToFile() throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("appointments.txt"))) {
-            for (Appointment a : appointments) {
-                bw.write(a.getId() + " | " + a.getName() + " | " + a.getBreed() + " | " +
-                         a.getDate() + " | " + a.getAppTime() + " | " +
-                         a.getContactNum() + " | " + a.getReason() + " | " + a.getStatus());
-                bw.newLine();
+    private void saveAppointmentsToFile() {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
+            pw.println("ClientID | ClientName | Species | Date | Time | ContactNumber | Reason");
+            for (Appointment appt : appointments) {
+                pw.println(appt.toString());
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving appointments: " + e.getMessage());
+        }
+    }
+
+    public void addAppointment() {
+        Appointment newAppointment = AppointmentClient.bookAppointment();
+        if (newAppointment != null) {
+            appointments.add(newAppointment);
+            saveAppointmentsToFile();
+        }
+    }
+
+    public void viewAll() {
+        System.out.println("----- All Appointments -----");
+        if (appointments.isEmpty()) {
+            System.out.println("No appointments found.");
+        } else {
+            for (Appointment appt : appointments) {
+                System.out.println(appt.toString());
             }
         }
+        System.out.println("----------------------------");
     }
 
-    @Override
-    public void add() {
-        AppointmentClient appointmentClient = new AppointmentClient();
-        appointmentClient.bookAppointment();  
+    public void search() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter Client Name to search: ");
+        String searchName = scanner.nextLine().trim().toLowerCase();
 
-        try {
-            loadAppointmentsFromFile(); 
-        } catch (IOException e) {
-            System.out.println("Error reloading appointments after booking: " + e.getMessage());
+        boolean found = false;
+        for (Appointment appt : appointments) {
+            if (appt.getName().toLowerCase().contains(searchName)) {
+                System.out.println(appt.toString());
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("No appointments found for client: " + searchName);
         }
     }
 
-    @Override 
-    public void edit() { //edit appointment deets
-        System.out.print("Enter Client ID to edit: ");
-        String id = sc.nextLine();
-        boolean found = false;
+    public void edit() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter Client ID to edit appointment: ");
+        String clientId = scanner.nextLine().trim();
 
-        for (Appointment a : appointments) {
-            if (a.getId().equalsIgnoreCase(id)) {
-                System.out.print("New Date: ");
-                a.setDate(sc.nextLine());
-
-                System.out.print("New Time: ");
-                a.setAppTime(sc.nextLine());
-
-                found = true;
+        Appointment toEdit = null;
+        for (Appointment appt : appointments) {
+            if (appt.getId().equals(clientId)) {
+                toEdit = appt;
                 break;
             }
         }
 
-        if (found) {
-            try {
-                saveAppointmentsToFile();
-                System.out.println("Appointment updated successfully.");
-            } catch (IOException e) {
-                System.out.println("Failed to save: " + e.getMessage());
-            }
-        } else {
+        if (toEdit == null) {
             System.out.println("Appointment not found.");
+            return;
         }
+
+        System.out.println("Current Appointment: " + toEdit.toString());
+
+        String newDate = AppointmentManager.inputAppointmentDate(scanner);
+        String newTime = AppointmentManager.inputAppointmentTime(scanner);
+
+        toEdit.setDate(newDate);
+        toEdit.setAppTime(newTime);
+
+        saveAppointmentsToFile();
+
+        System.out.println("Appointment updated successfully.");
     }
 
-    @Override
     public void delete() {
-        System.out.print("Enter Client ID to delete: ");
-        String id = sc.nextLine();
-        boolean removed = appointments.removeIf(a -> a.getId().equalsIgnoreCase(id));
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter Client ID to delete appointment: ");
+        String clientId = scanner.nextLine().trim();
+
+        boolean removed = appointments.removeIf(appt -> appt.getId().equals(clientId));
 
         if (removed) {
-            try {
-                saveAppointmentsToFile();
-                System.out.println("Appointment deleted.");
-            } catch (IOException e) {
-                System.out.println("Failed to save changes: " + e.getMessage());
-            }
+            saveAppointmentsToFile();
+            System.out.println("Appointment deleted successfully.");
         } else {
             System.out.println("Appointment not found.");
         }
     }
 
-    @Override
-    public void search() {
-        System.out.print("Enter Client ID or Name: ");
-        String keyword = sc.nextLine().toLowerCase();
-        boolean found = false;
+    // --- Input validation methods ---
 
-        for (Appointment a : appointments) {
-            if (a.getId().toLowerCase().contains(keyword) || a.getName().toLowerCase().contains(keyword)) {
-                displayAppointment(a);
-                found = true;
-            }
-        }
-
-        if (!found) {
-            System.out.println("No appointment found.");
-        }
-    }
-
-    private void displayAppointment(Appointment a) {
-        System.out.println("\n--- Appointment Details ---");
-        System.out.println("Client ID     : " + a.getId());
-        System.out.println("Client Name   : " + a.getName());
-        System.out.println("Breed         : " + a.getBreed());
-        System.out.println("Date          : " + a.getDate());
-        System.out.println("Time          : " + a.getAppTime());
-        System.out.println("Contact No.   : " + a.getContactNum());
-        System.out.println("Reason        : " + a.getReason());
-        System.out.println("Status        : " + a.getStatus());
-        System.out.println("----------------------------\n");
-    }
-
-    @Override
-    public void viewAll() {
-        if (appointments.isEmpty()) {
-            System.out.println("No appointments available.");
-        }
-    }
-
-    public void editStatus() { //edit if pending, completed, canceled
-    Scanner sc = new Scanner(System.in);
-    System.out.print("Enter the Client ID of the appointment to update status: ");
-    String id = sc.nextLine().trim();
-
-    boolean found = false;
-
-    for (Appointment a : appointments) {
-        if (a.getId().equalsIgnoreCase(id)) {
-            System.out.println("Appointment found:");
-            displayAppointment(a);
-
-            System.out.print("Enter new status (e.g., Pending, Completed, Canceled): ");
-            String newStatus = sc.nextLine().trim();
-
-
-            a.setStatus(newStatus);
-            System.out.println("Status updated successfully!");
-
+    public static String inputAppointmentDate(Scanner scanner) {
+        String date;
+        while (true) {
             try {
-                saveAppointmentsToFile();
-            } catch (IOException e) {
-                System.out.println("Failed to save updated status: " + e.getMessage());
-            }
-
-            found = true;
-            break;
-        }
-    }
-
-    if (!found) {
-        System.out.println("No appointment found with ID: " + id);
-    }
-}
-
-}
+                System.out.print("Enter Appointment Date (YYYY-MM-DD): ");
+                date = scanner.nextLine().trim();
+                LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+                return date;

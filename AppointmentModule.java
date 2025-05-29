@@ -2,47 +2,46 @@ import java.util.Scanner;
 
 public class AppointmentModule {
 
-    public static void showClientMenu(){
+    public static void showAppointmentMenu() {
 
         Scanner sc = new Scanner(System.in);
+        AppointmentManager apptManager = new AppointmentManager();
 
-        AppointmentManager ApM = new AppointmentManager();
-        DashboardModule dm = new DashboardModule();
+        while (true) {
+            System.out.println("\nAPPOINTMENT MANAGEMENT");
+            System.out.println("1. Add Appointment");
+            System.out.println("2. View All Appointments");
+            System.out.println("3. Search Appointments");
+            System.out.println("4. Edit Appointment");
+            System.out.println("5. Delete Appointment");
+            System.out.println("6. Exit");
+            System.out.print("Choose an option: ");
 
-        ApM.viewAll(); 
-        
-        while (true){
-            System.out.println("CLIENT MANAGEMENT");
-            System.out.println("1. Add Client");
-            System.out.println("2. Search Clients");
-            System.out.println("3. Update Clients");
-            System.out.println("4. Delete Clients");
-            System.out.println("5. Back");
-            System.out.println("Choose 1 Option");
-            int choice = sc.nextInt();
-            sc.nextLine();
-
-            switch (choice){
-                case 1: 
-                    ApM.add();
-                    break;
-                case 2:
-                    ApM.search();
-                    break;
-                case 3:
-                    ApM.edit();
-                    break;
-                case 4:
-                    ApM.delete();
-                    break;
-                case 5:
-                    dm.showDashboard();
-                default: 
-                    System.out.println("Invalid choice");
-
+            int choice = -1;
+            try {
+                choice = Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                continue;
             }
 
-
+            switch (choice) {
+                case 1 -> apptManager.add();
+                case 2 -> apptManager.viewAll();
+                case 3 -> apptManager.search();
+                case 4 -> apptManager.edit();
+                case 5 -> apptManager.delete();
+                case 6 -> {
+                    System.out.println("Exiting Appointment Module.");
+                    return;
+                }
+                default -> System.out.println("Invalid choice. Try again.");
+            }
         }
+    }
+
+    // For testing purposes:
+    public static void main(String[] args) {
+        showAppointmentMenu();
     }
 }

@@ -6,9 +6,8 @@ public class Appointment {
     private String appTime; 
     private String contactNum;
     private String reason;
-    private String status;
 
-    public Appointment(String id, String name, String breed, String date, String appTime, String contactNum, String reason, String status){
+    public Appointment(String id, String name, String breed, String date, String appTime, String contactNum, String reason){
         this.id = id;
         this.name = name;
         this.breed = breed;
@@ -16,55 +15,22 @@ public class Appointment {
         this.appTime = appTime;
         this.contactNum = contactNum;
         this.reason = reason;
-        this.status = status;
+    }
 
+    // Getters and setters
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public String getBreed() { return breed; }
+    public String getDate() { return date; }
+    public String getAppTime() { return appTime; }
+    public String getContactNum() { return contactNum; }
+    public String getReason() { return reason; }
 
+    public void setDate(String date) { this.date = date; }
+    public void setAppTime(String appTime) { this.appTime = appTime; }
 
+    @Override
+    public String toString() {
+        return id + " | " + name + " | " + breed + " | " + date + " | " + appTime + " | " + contactNum + " | " + reason;
+    }
 }
-
- public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getBreed() {
-        return breed;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public String getAppTime() {
-        return appTime;
-    }
-
-    public String getContactNum() {
-        return contactNum;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public String getStatus(){
-        return status;
-    }
-
-    public void setDate(String trim) {
-        this.date = trim;
-    }
-
-    public void setAppTime(String nextLine) {
-        this.appTime = nextLine;
-    }
-
-    public void setStatus(String nextLine) {
-        this.status = nextLine;
-    }
-
-}
-
