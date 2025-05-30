@@ -25,9 +25,17 @@ public class DashboardModule {
                 AnimalModule.showAnimalMenu(c);
                 break;
             case 3:
+                System.out.println("Working on it");
+                break;
             case 4:
+                System.out.println("Working on it");
+                break;
             case 5:
+                System.out.println("Working on it");
+                break;
             case 6:
+                System.out.println("Working on it");
+                break;
             case 7:
                 System.out.println("Working on it");
                 break;
