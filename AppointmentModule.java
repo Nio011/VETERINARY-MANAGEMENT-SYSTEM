@@ -40,8 +40,6 @@ public class AppointmentModule {
         }
     }
 
-    // For testing purposes:
-    public static void main(String[] args) {
-        showAppointmentMenu();
-    }
+
 }
+

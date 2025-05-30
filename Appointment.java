@@ -1,16 +1,16 @@
 public class Appointment {
     private String id;
     private String name; 
-    private String breed;
+    private String species;
     private String date;
     private String appTime; 
     private String contactNum;
     private String reason;
 
-    public Appointment(String id, String name, String breed, String date, String appTime, String contactNum, String reason){
+    public Appointment(String id, String name, String species, String date, String appTime, String contactNum, String reason){
         this.id = id;
         this.name = name;
-        this.breed = breed;
+        this.species = species;
         this.date = date;
         this.appTime = appTime;
         this.contactNum = contactNum;
@@ -20,7 +20,7 @@ public class Appointment {
     // Getters and setters
     public String getId() { return id; }
     public String getName() { return name; }
-    public String getBreed() { return breed; }
+    public String getSpecies() { return species; }
     public String getDate() { return date; }
     public String getAppTime() { return appTime; }
     public String getContactNum() { return contactNum; }
@@ -28,9 +28,9 @@ public class Appointment {
 
     public void setDate(String date) { this.date = date; }
     public void setAppTime(String appTime) { this.appTime = appTime; }
+    public void setContactNum(String contactNum) {this.contactNum = contactNum;}
 
-    @Override
-    public String toString() {
-        return id + " | " + name + " | " + breed + " | " + date + " | " + appTime + " | " + contactNum + " | " + reason;
+    public String toFileString() {
+        return id + " | " + name + " | " + species + " | " + date + " | " + appTime + " | " + contactNum + " | " + reason;
     }
 }

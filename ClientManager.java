@@ -48,7 +48,6 @@ public class ClientManager implements AdminActions {
                 } // Para sa Id to
 
                 Client loadedClient = new Client(id, name, email, contactNum);
-                clients.add(loadedClient);
                 lastAddedClient = loadedClient; 
             }
         }
@@ -110,7 +109,7 @@ public class ClientManager implements AdminActions {
          }
 
          @Override
-         public void viewAll(){ //para makita sila sa dashboard
+         public void viewAll(){ //para makita sila sa client module
             if (clients.isEmpty()){
                 System.out.println("No Clients Found");
                 return;
