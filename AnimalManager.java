@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class AnimalManager {
+public class AnimalManager implements AdminActions{
     private Scanner sc;
     private List<Animal> animals;
     private int lastAnimalId = 0;
@@ -17,41 +17,8 @@ public class AnimalManager {
         loadFromFile();
     }
 
-    public void showAnimalMenu() {
-        while (true) {
-            System.out.println("\n=== Animal Manager ===");
-            System.out.println("1. Add Animal");
-            System.out.println("2. View Animals");
-            System.out.println("3. Update Animal");
-            System.out.println("4. Delete Animal");
-            System.out.println("5. Exit to Main Menu");
-            System.out.print("Choose an option: ");
-            String input = sc.nextLine();
 
-            switch (input) {
-                case "1":
-                    addAnimal();
-                    break;
-                case "2":
-                    viewAnimals();
-                    break;
-                case "3":
-                    updateAnimal();
-                    break;
-                case "4":
-                    deleteAnimal();
-                    break;
-                case "5":
-                    System.out.println("Exiting Animal Manager...");
-                    saveToFile();
-                    return;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-            }
-        }
-    }
-
-    private void addAnimal() {
+    public void add() {
         System.out.print("Enter Client Name: ");
         String clientName = sc.nextLine().trim();
 
@@ -102,7 +69,7 @@ public class AnimalManager {
         saveToFile();
     }
 
-    private void viewAnimals() {
+    public void viewAll() {
         if (animals.isEmpty()) {
             System.out.println("No animals to display.");
             return;
@@ -113,7 +80,7 @@ public class AnimalManager {
         }
     }
 
-    private void updateAnimal() {
+    public void edit() {
         System.out.print("Enter Animal ID to update: ");
         String id = sc.nextLine().trim();
 
@@ -170,7 +137,7 @@ public class AnimalManager {
         saveToFile();
     }
 
-    private void deleteAnimal() {
+    public void delete() {
         System.out.print("Enter Animal ID to delete: ");
         String id = sc.nextLine().trim();
 
@@ -194,12 +161,12 @@ public class AnimalManager {
         return null;
     }
 
-    private String generateAnimalId() {
+    public String generateAnimalId() {
         lastAnimalId++;
         return String.format("ANM%03d", lastAnimalId);
     }
 
-    private void saveToFile() {
+    public void saveToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (Animal a : animals) {
               
@@ -217,7 +184,11 @@ public class AnimalManager {
         }
     }
 
-    private void loadFromFile() {
+    public void search(){
+        System.out.println("nice");
+    }
+
+    public void loadFromFile() {
         File file = new File(filename);
         if (!file.exists()) {
             return; 
