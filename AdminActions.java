@@ -5,4 +5,6 @@ public interface AdminActions { //Actions to be implemented by Client and Servic
     void search(); 
     void viewAll();
 
+    //Neoooomiii
+
 }
