@@ -1,135 +1,260 @@
 import java.io.*;
-import java.util.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-public class AnimalManager implements AdminActions {
+public class AnimalManager {
+    private Scanner sc;
+    private List<Animal> animals;
+    private int lastAnimalId = 0;
+    private final String filename = "animals.txt";
 
-    Scanner sc = new Scanner(System.in);
-    private static List<Animal> animals = new ArrayList<>();
-
-    static {
-            try {
-                loadAnimalsFromFile(); //for automatic loading of Animals to the file
-            } catch (IOException e) {
-                System.out.println("An unexpected error occured. Could not load clients at the moment " + e.getMessage());
-            }
-
-        }
-
-        private static void loadAnimalsFromFile() throws IOException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");;
-        animals.clear();
-        BufferedReader reader = new BufferedReader(new FileReader("AnimalRecords.txt"));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] parts = line.split("\\|");
-             if (parts.length >= 8) {
-                String id = parts[0].trim();
-                String name = parts[1].trim();
-                String petName = parts[2].trim();
-                String species = parts[3].trim();
-                String breed = parts[4].trim();
-                String dobStr = parts[5].trim();
-                LocalDate dob = LocalDate.parse(dobStr, formatter);
-                double weight = Double.parseDouble(parts[7].trim()); 
-
-                Animal animal = null;
-                if (species.equalsIgnoreCase("Dog")) {
-                    animal = new Dog(id, name, petName, breed, dob, weight);
-                } else if (species.equalsIgnoreCase("Cat")) {
-                    animal = new Cat(id, name, petName, breed, dob, weight);
-                } else {
-                    System.out.println("Animal not supported");
-                }
-                animals.add(animal);
-            }
-        }
-        reader.close();
+    public AnimalManager(Scanner sc) {
+        this.sc = sc;
+        this.animals = new ArrayList<>();
+        loadFromFile();
     }
 
-     private static void saveAnimalToFile(Animal animal) {
-        try (BufferedWriter write = new BufferedWriter(new FileWriter("AnimalRecords.txt", true))) {
-            write.write(animal.toFileString());
-            write.newLine();
-        } catch (IOException e) {
-            System.out.println("Error saving animal to file: " + e.getMessage());
+    public void showAnimalMenu() {
+        while (true) {
+            System.out.println("\n=== Animal Manager ===");
+            System.out.println("1. Add Animal");
+            System.out.println("2. View Animals");
+            System.out.println("3. Update Animal");
+            System.out.println("4. Delete Animal");
+            System.out.println("5. Exit to Main Menu");
+            System.out.print("Choose an option: ");
+            String input = sc.nextLine();
+
+            switch (input) {
+                case "1":
+                    addAnimal();
+                    break;
+                case "2":
+                    viewAnimals();
+                    break;
+                case "3":
+                    updateAnimal();
+                    break;
+                case "4":
+                    deleteAnimal();
+                    break;
+                case "5":
+                    System.out.println("Exiting Animal Manager...");
+                    saveToFile();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
         }
     }
 
+    private void addAnimal() {
+        System.out.print("Enter Client Name: ");
+        String clientName = sc.nextLine().trim();
 
+        System.out.print("Enter Pet Name: ");
+        String petName = sc.nextLine().trim();
 
-@Override
-    public void add() {
-            if (ClientManager.lastAddedClient == null) {
-                System.out.println("No client found. Please add a client first.");
+        System.out.print("Enter Species (Dog or Cat): ");
+        String species = sc.nextLine().trim();
+
+        System.out.print("Enter Breed: ");
+        String breed = sc.nextLine().trim();
+
+        System.out.print("Enter Date of Birth (MM/dd/yyyy): ");
+        String dobStr = sc.nextLine().trim();
+
+        LocalDate dob;
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            dob = LocalDate.parse(dobStr, formatter);
+        } catch (Exception e) {
+            System.out.println("Invalid date format. Please use MM/dd/yyyy.");
             return;
+        }
+
+        System.out.print("Enter Weight (kg): ");
+        double weight;
+        try {
+            weight = Double.parseDouble(sc.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid weight format.");
+            return;
+        }
+
+        String id = generateAnimalId();
+
+        Animal animal;
+        if (species.equalsIgnoreCase("Dog")) {
+            animal = new Dog(id, clientName, petName, breed, dob, weight);
+        } else if (species.equalsIgnoreCase("Cat")) {
+            animal = new Cat(id, clientName, petName, breed, dob, weight);
+        } else {
+            System.out.println("Species not supported.");
+            return;
+        }
+
+        animals.add(animal);
+        System.out.println("Animal added successfully with ID: " + id);
+        saveToFile();
     }
 
-            String clientId = ClientManager.lastAddedClient.getId();
-            String clientName = ClientManager.lastAddedClient.getName();
-
-            System.out.println("Adding pet for: " + clientName + " (ID: " + clientId + ")");
-
-            System.out.print("Enter Pet's Name: ");
-            String petName = sc.nextLine();
-            System.out.print("Enter Species (Dog/Cat): ");
-            String species = sc.nextLine();
-            System.out.print("Enter Breed: ");
-            String breed = sc.nextLine();
-            System.out.print("Enter Date of Birth (YYYY-MM-dd): ");
-            LocalDate dob = LocalDate.parse(sc.nextLine());
-            System.out.print("Enter Weight (kg): ");
-            double weight = Double.parseDouble(sc.nextLine());
-
-            Animal animal;
-            if (species.equalsIgnoreCase("Dog")) {
-            animal = new Dog(clientId, clientName, petName, breed, dob, weight);
-            } else if (species.equalsIgnoreCase("Cat")) {
-            animal = new Cat(clientId, clientName, petName, breed, dob, weight);
-            } else {
-                System.out.println("Unsupported Species");
-                return;
-            }
-
-            animals.add(animal);
-            saveAnimalToFile(animal);
-            System.out.println("Pet added to " + clientName);
-}
-
-
-    @Override
-    public void edit() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'edit'");
-    }
-
-    @Override
-    public void delete() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
-    }
-
-    @Override
-    public void search() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'search'");
-    }
-
-
-
-    @Override
-    public void viewAll() {
+    private void viewAnimals() {
         if (animals.isEmpty()) {
-        System.out.println("No pets found.");
-        return;
+            System.out.println("No animals to display.");
+            return;
+        }
+        System.out.println("\nList of Animals:");
+        for (Animal a : animals) {
+            System.out.println(a.toFileString());
+        }
     }
 
-        System.out.println("List of all pets:");
-            for (Animal animal : animals) {
-            System.out.println(animal);
-    }
+    private void updateAnimal() {
+        System.out.print("Enter Animal ID to update: ");
+        String id = sc.nextLine().trim();
+
+        Animal animal = findAnimalById(id);
+        if (animal == null) {
+            System.out.println("Animal not found.");
+            return;
+        }
+
+        System.out.println("Updating animal: " + animal.toString());
+
+        System.out.print("Enter new Client Name (or press Enter to keep current): ");
+        String newClientName = sc.nextLine().trim();
+        if (!newClientName.isEmpty()) {
+            animal.setName(newClientName);
+        }
+
+        System.out.print("Enter new Pet Name (or press Enter to keep current): ");
+        String newPetName = sc.nextLine().trim();
+        if (!newPetName.isEmpty()) {
+            animal.setPetName(newPetName);
+        }
+
+        System.out.print("Enter new Breed (or press Enter to keep current): ");
+        String newBreed = sc.nextLine().trim();
+        if (!newBreed.isEmpty()) {
+            animal.setBreed(newBreed);
+        }
+
+        System.out.print("Enter new Date of Birth (MM/dd/yyyy) (or press Enter to keep current): ");
+        String dobStr = sc.nextLine().trim();
+        if (!dobStr.isEmpty()) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+                LocalDate dob = LocalDate.parse(dobStr, formatter);
+                animal.setDateOfBirth(dob);
+            } catch (Exception e) {
+                System.out.println("Invalid date format. Date not updated.");
+            }
+        }
+
+        System.out.print("Enter new Weight (kg) (or press Enter to keep current): ");
+        String weightStr = sc.nextLine().trim();
+        if (!weightStr.isEmpty()) {
+            try {
+                double weight = Double.parseDouble(weightStr);
+                animal.setWeight(weight);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid weight format. Weight not updated.");
+            }
+        }
+
+        System.out.println("Animal updated.");
+        saveToFile();
     }
 
+    private void deleteAnimal() {
+        System.out.print("Enter Animal ID to delete: ");
+        String id = sc.nextLine().trim();
 
+        Animal animal = findAnimalById(id);
+        if (animal == null) {
+            System.out.println("Animal not found.");
+            return;
+        }
+
+        animals.remove(animal);
+        System.out.println("Animal deleted successfully.");
+        saveToFile();
+    }
+
+    private Animal findAnimalById(String id) {
+        for (Animal a : animals) {
+            if (a.getId().equalsIgnoreCase(id)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    private String generateAnimalId() {
+        lastAnimalId++;
+        return String.format("ANM%03d", lastAnimalId);
+    }
+
+    private void saveToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Animal a : animals) {
+              
+                writer.write(String.format("%s,%s,%s,%s,%s,%s,%.2f%n",
+                        a.getId(),
+                        a.getName(),
+                        a.getPetName(),
+                        a.getBreed(),
+                        a.getSpecies(),
+                        a.getDateOfBirth().toString(), 
+                        a.getWeight()));
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving animals to file: " + e.getMessage());
+        }
+    }
+
+    private void loadFromFile() {
+        File file = new File(filename);
+        if (!file.exists()) {
+            return; 
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length < 7) continue; 
+
+                String id = parts[0];
+                String clientName = parts[1];
+                String petName = parts[2];
+                String breed = parts[3];
+                String species = parts[4];
+                LocalDate dob = LocalDate.parse(parts[5]);
+                double weight = Double.parseDouble(parts[6]);
+
+                Animal animal;
+                if (species.equalsIgnoreCase("Dog")) {
+                    animal = new Dog(id, clientName, petName, breed, dob, weight);
+                } else if (species.equalsIgnoreCase("Cat")) {
+                    animal = new Cat(id, clientName, petName, breed, dob, weight);
+                } else {
+                    continue; 
+                }
+
+                animals.add(animal);
+
+                try {
+                    int num = Integer.parseInt(id.replace("ANM", ""));
+                    if (num > lastAnimalId) lastAnimalId = num;
+                } catch (NumberFormatException ignored) {}
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading animals from file: " + e.getMessage());
+        }
+    }
 }

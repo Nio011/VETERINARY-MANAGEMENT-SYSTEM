@@ -1,43 +1,55 @@
 import java.io.*;
 import java.util.*;
 
-//okay na to
-
-//tama na plss
-
-//4.0 na this
-
 public class ClientManager implements AdminActions {
 
-        public static Client lastAddedClient;
-        Scanner sc = new Scanner(System.in);
-        static int lastId; //For Clients unique ID
-        private static List<Client> clients = new ArrayList<>(); //Using Array list to manipulate the clients individually
+    private Scanner sc;
+    private static List<Client> clients = new ArrayList<>();
+    private static int lastId = 0;
+    public static Client lastAddedClient;
 
-          static {
-            try {
-                loadClientsFromFile(); //for automatic loading of client to the file
-            } catch (IOException e) {
-                System.out.println("An unexpected error occured. Could not load clients at the moment " + e.getMessage());
-            }
+    // Static block to load clients from file on class load
+    static {
+        try {
+            loadClientsFromFile();
+        } catch (IOException e) {
+            System.out.println("An unexpected error occurred. Could not load clients: " + e.getMessage());
+        }
+    }
 
+    public ClientManager(Scanner sc) {
+        this.sc = sc;
+    }
+
+    public ClientManager() {
+        this.sc = new Scanner(System.in);
+    }
+
+    private static void loadClientsFromFile() throws IOException {
+        clients.clear();
+        lastId = 0;
+
+        File file = new File("ListofClients.txt");
+        if (!file.exists()) {
+            file.createNewFile();
+            return;  // No file yet, so no clients to load
         }
 
-        private static void loadClientsFromFile() throws FileNotFoundException, IOException { //Creating and Formatting yung sa client
-            clients.clear();
-            lastId = 0;
-            try (BufferedReader reader = new BufferedReader(new FileReader("ListofClients.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
-            while ((line = reader.readLine()) != null){
-                String [] parts = line.split("\\|");
-                if (parts.length >= 4){ //Para magkakahiwalay sila
-                    String id = parts[0];
-                    String name = parts[1];
-                    String email = parts[2];
-                    String contactNum = parts[3];
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length >= 4) {
+                    String id = parts[0].trim();
+                    String name = parts[1].trim();
+                    String email = parts[2].trim();
+                    String contactNum = parts[3].trim();
 
-                    clients.add(new Client (id, name, email, contactNum)); 
+                    Client client = new Client(id, name, email, contactNum);
+                    clients.add(client);
+                    lastAddedClient = client;
 
+                    // Update lastId
                     try {
                     int num = Integer.parseInt(id.replaceAll("[^0-9]", ""));
                     if (num > lastId) {
@@ -52,61 +64,71 @@ public class ClientManager implements AdminActions {
             }
         }
         reader.close();
-    }
-    
-}
-
-        public static String generateClientId(){ //eto pag gegenerate na ng Client ID
-            lastId++; //Increment lang kunwari 001 yung last nung nauna magiging 002 yung susunod
-            return String.format("CLT%03d",lastId);
-        }
-
-        public static void saveClient(Client client){ //Para malagay yung client na nasa arrayList papunta sa File
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter ("ListofClients.txt", true))){
-                writer.write(client.toFileString());
-                writer.newLine();
-            } catch (IOException e){
-                System.out.println("Error saving client to the file");
+                        int num = Integer.parseInt(id.replaceAll("[^0-9]", ""));
+                        if (num > lastId) lastId = num;
+                    } catch (NumberFormatException ignored) {
+                    }
+                }
             }
         }
+    }
 
-        private static void overwriteFile(){ //Para maupdate yung information
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter ("ListofClients.txt"))){
-                for (Client client : clients) {
-                    writer.write(client.toFileString());
-                    writer.newLine();
-                }
+    public static String generateClientId() {
+        lastId++;
+        return String.format("CLT%03d", lastId);
+    }
 
-            
+    public static void saveClient(Client client) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("ListofClients.txt", true))) {
+            writer.write(client.toFileString());
+            writer.newLine();
         } catch (IOException e) {
-            System.out.println("An Unexpected Error Occured");
+            System.out.println("Error saving client to file: " + e.getMessage());
         }
     }
 
-         @Override
-         public void add() { //basta eto yung part na iaadd tsaka isasave na yung client sa file and arrayList
-           
-            System.out.println("Enter Client's Name: ");
-            String name = sc.nextLine();
-            System.out.println("Enter Client's Email: ");
-            String email = sc.nextLine();
-            System.out.println("Enter Client's Phone Number: ");
-            String contactNum = sc.nextLine();
+    private static void overwriteFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("ListofClients.txt"))) {
+            for (Client client : clients) {
+                writer.write(client.toFileString());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("An unexpected error occurred during file overwrite: " + e.getMessage());
+        }
+    }
 
-            String id = generateClientId();
-            Client client = new Client(id, name, email, contactNum);
-            clients.add (client);
-            saveClient(client);
-            System.out.println("Client's ID: " + id);
+    public static Client findClientByName(String name) {
+        for (Client client : clients) {
+            if (client.getName().equalsIgnoreCase(name.trim())) {
+                return client;
+            }
+        }
+        return null;
+    }
 
-            ClientManager.lastAddedClient = client;
+    @Override
+    public void add() {
+        System.out.print("Enter Client's Name: ");
+        String name = sc.nextLine().trim();
 
-            AnimalManager am = new AnimalManager();
-            am.add();
+        System.out.print("Enter Client's Email: ");
+        String email = sc.nextLine().trim();
 
+        System.out.print("Enter Client's Phone Number: ");
+        String contactNum = sc.nextLine().trim();
 
+        String id = generateClientId();
+        Client client = new Client(id, name, email, contactNum);
 
-         }
+        clients.add(client);
+        saveClient(client);
+
+        System.out.println("Client added successfully.");
+        System.out.println("Client ID: " + id);
+
+        lastAddedClient = client;
+    }
 
          @Override
          public void viewAll(){ //para makita sila sa client module
@@ -114,104 +136,111 @@ public class ClientManager implements AdminActions {
                 System.out.println("No Clients Found");
                 return;
             }
-
-            System.out.println("\nList of Clients");
-            System.out.println("======================================================================");
-            for (Client client : clients){
-                System.out.println(client.toFileString());
-            }
-            System.out.println("======================================================================");
-         }
-         
-
-         @Override
-         public void edit() { // to update info (Contact and Email)
-            System.out.println("Enter Client's ID: ");
-            String searchId = sc.nextLine().trim();
-            boolean found = false;
-            for (Client client : clients){
-                System.out.println("Checking: " + client.getId());
-                if (client.getId().trim().equals(searchId.trim())){
-                    System.out.println("Updating Client's Info: " + client.getName());
-
-                    System.out.println("New Email: ");
-                    String newEmail = sc.nextLine();
-                    System.out.println("New Contact Number: ");
-                    String newContactNum = sc.nextLine();
-
-                    clients.remove(client);
-                    Client updated = new Client(searchId, client.getName(), newEmail, newContactNum);
-                    clients.add(updated);
-                    overwriteFile();
-                    found = true; 
-                    System.out.println("Client Updated");
-                    System.out.println("ID: " + updated.getId());
-                    System.out.println("Name: " + updated.getName());
-                    System.out.println("Email: " + updated.getEmail());
-                    System.out.println("Contact Number: " + updated.getContactNum());
-                    break;
-                }
-            }
-         }
-
-         @Override
-         public void delete() {
-            System.out.println("Enter Client's ID to delete: ");
-            String searchId = sc.nextLine();
-
-            boolean found = false;
-            Client toDelete = null; 
-
-            for (Client client : clients){
-                System.out.println("Checking client ID: [" + client.getId() + "]");
-                System.out.println("Comparing with input: [" + searchId + "]");
-                if (client.getId().trim().equals(searchId.trim())){
-                    toDelete = client;
-                    break;
-                }
-            }
-
-            if (toDelete !=null){
-                clients.remove(toDelete);
-                overwriteFile();
-                found = true;
-                System.out.println("Client Deleted");
-            }
-
-            if (!found){
-                System.out.println("Client ID not found");
-            }
-         }
-         
-
-         @Override
-         public void search() {
-            System.out.println("Enter Client's ID to search: ");
-            String searchId = sc.nextLine();
-
-            boolean found = false; 
-
-            for (Client client : clients){
-                if (client.getId().equalsIgnoreCase(searchId)){
-                    System.out.println("\nClient Found");
-                    System.out.println("ID: " + client.getId());
-                    System.out.println("Name: " + client.getName());
-                    System.out.println("Email: " + client.getEmail());
-                    System.out.println("Contact Number: " + client.getContactNum());
-                    found = true;
-                    break;
-                }
-            }   if (!found){
-                    System.out.println("Client not found");
-                }
-
+    @Override
+    public void viewAll() {
+        if (clients.isEmpty()) {
+            System.out.println("No clients found.");
+            return;
         }
 
+        System.out.println("\nList of Clients");
+        System.out.println("===============================================");
+        for (Client client : clients) {
+            System.out.println(client.toFileString());
+        }
+        System.out.println("===============================================");
+    }
+
+    @Override
+    public void edit() {
+        System.out.print("Enter Client's ID to update: ");
+        String searchId = sc.nextLine().trim();
+
+        boolean found = false;
+        for (int i = 0; i < clients.size(); i++) {
+            Client client = clients.get(i);
+            if (client.getId().equalsIgnoreCase(searchId)) {
+                System.out.println("Updating Client: " + client.getName());
+
+                System.out.print("New Email (leave blank to keep current): ");
+                String newEmail = sc.nextLine().trim();
+                if (newEmail.isEmpty()) newEmail = client.getEmail();
+
+                System.out.print("New Contact Number (leave blank to keep current): ");
+                String newContactNum = sc.nextLine().trim();
+                if (newContactNum.isEmpty()) newContactNum = client.getContactNum();
+
+                Client updatedClient = new Client(client.getId(), client.getName(), newEmail, newContactNum);
+                clients.set(i, updatedClient);
+                overwriteFile();
+
+                System.out.println("Client updated successfully.");
+                System.out.println("ID: " + updatedClient.getId());
+                System.out.println("Name: " + updatedClient.getName());
+                System.out.println("Email: " + updatedClient.getEmail());
+                System.out.println("Contact Number: " + updatedClient.getContactNum());
+
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Client ID not found.");
+        }
+    }
+
+    @Override
+    public void delete() {
+        System.out.print("Enter Client's ID to delete: ");
+        String searchId = sc.nextLine().trim();
+
+        boolean found = false;
+        Iterator<Client> iterator = clients.iterator();
+
+        while (iterator.hasNext()) {
+            Client client = iterator.next();
+            if (client.getId().equalsIgnoreCase(searchId)) {
+                System.out.print("Are you sure you want to delete client " + client.getName() + " (Y/N)? ");
+                String confirmation = sc.nextLine().trim();
+
+                if (confirmation.equalsIgnoreCase("Y")) {
+                    iterator.remove();
+                    overwriteFile();
+                    System.out.println("Client deleted successfully.");
+                } else {
+                    System.out.println("Deletion cancelled.");
+                }
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Client ID not found.");
+        }
+    }
+
+    @Override
+    public void search() {
+        System.out.print("Enter Client's ID to search: ");
+        String searchId = sc.nextLine().trim();
+
+        boolean found = false;
+        for (Client client : clients) {
+            if (client.getId().equalsIgnoreCase(searchId)) {
+                System.out.println("\nClient Found:");
+                System.out.println("ID: " + client.getId());
+                System.out.println("Name: " + client.getName());
+                System.out.println("Email: " + client.getEmail());
+                System.out.println("Contact Number: " + client.getContactNum());
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Client not found.");
+        }
+    }
 }
-
-
-        
-
-
-
-        
