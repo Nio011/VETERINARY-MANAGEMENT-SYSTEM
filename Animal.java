@@ -2,8 +2,8 @@ import java.time.LocalDate;
 import java.time.Period;
 
 public abstract class Animal {
-    private String id; // Client ID generated
-    private String name; //name of client
+    private String id;
+    private String name;
     private String petName;
     private String species;
     private String breed;
@@ -20,48 +20,32 @@ public abstract class Animal {
         this.weight = weight;
     }
 
-    public string getId() {
-        return id;
-    }
+    // Getters
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public String getPetName() { return petName; }
+    public String getSpecies() { return species; }
+    public String getBreed() { return breed; }
+    public LocalDate getDateOfBirth() { return dateOfBirth; }
+    public double getWeight() { return weight; }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getPetName() {
-        return petName;
-    }
-
-    public String getSpecies() {
-        return species;
-    }
-
-    public String getBreed() {
-        return breed;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
+    // Setters
+    public void setName(String name) { this.name = name; }
+    public void setPetName(String petName) { this.petName = petName; }
+    public void setBreed(String breed) { this.breed = breed; }
+    public void setDateOfBirth(LocalDate dob) { this.dateOfBirth = dob; }
+    public void setWeight(double weight) { this.weight = weight; }
 
     public String getAge() {
         LocalDate now = LocalDate.now();
-        Period age = Period.between(dateOfBirth, now);
-        return age.getYears() + " year(s), " + age.getMonths() + " month(s), and " + age.getDays() + " day(s)";
+        Period p = Period.between(dateOfBirth, now);
+        return p.getYears() + " years, " + p.getMonths() + " months";
     }
 
     public abstract String toFileString();
 
- @Override
-public String toString() {
-    return "Client ID: " + id +
-           " | Client Name: " + name +
-           " | Pet Name: " + petName +
-           " | Species: " + species;
-}
-
+    @Override
+    public String toString() {
+        return toFileString();
+    }
 }

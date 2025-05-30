@@ -1,2 +1,4 @@
-CLT001 | Neomi  | neomi@gmail.com | 09789989689
-CLT002 | Alex | Alec@gmail.com | 0909888776654
+CLT003 | Alessandra | Ales@gmail.com | 09322315299
+CLT004 | Neo | Neo@gmail.com | 09999999999
+CLT005 | Ken | Kenn@gmail.com | 09111111111
+CLT006 | karl | karl@gmail.com | 09222222222

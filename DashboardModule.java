@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class DashboardModule {
 
-    public void moduleChoice(){
+    public void moduleChoice() {
         Scanner c = new Scanner(System.in);
         System.out.println("1. Clients");
         System.out.println("2. Pet Details");
@@ -13,38 +13,30 @@ public class DashboardModule {
         System.out.println("5. All Sales");
         System.out.println("6. POS");
         System.out.println("7. Change Password");
-        System.out.println("Choose 1 Option: ");
+        System.out.print("Choose 1 Option: ");
         int choice = c.nextInt();
+        c.nextLine(); // consume newline
 
-        switch (choice){
-            case 1: 
-                ClientModule.showClientMenu(); 
+        switch (choice) {
+            case 1:
+                ClientModule.showClientMenu(); // Assuming ClientModule exists
                 break;
-            case 2: 
-                AnimalModule.showAnimalMenu();
+            case 2:
+                AnimalModule.showAnimalMenu(c); // Pass Scanner here
                 break;
-            case 3: 
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
                 System.out.println("Working on it");
                 break;
-            case 4: 
-                System.out.println("Working on it");
-                break;
-            case 5: 
-                System.out.println("Working on it");
-                break;
-            case 6: 
-                System.out.println("Working on it");
-                break;
-            case 7: 
-                System.out.println("Working on it");
-                break;
-            default: 
+            default:
                 System.out.println("Invalid Choice");
         }
     }
 
-    public void showDashboard(){
-
+    public void showDashboard() {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("MM dd, yyyy | hh:mm a");
         String formattedDateTime = now.format(format);
@@ -53,7 +45,7 @@ public class DashboardModule {
         System.out.println("ADMIN DASHBOARD");
         System.out.println("DATE & TIME: " + formattedDateTime);
         System.out.println();
-        
+
         System.out.println("System Overview");
         System.out.println("TOTAL CLIENTS: ");
         System.out.println("TODAY'S APPOINTMENT: ");
@@ -63,7 +55,5 @@ public class DashboardModule {
 
         System.out.println("MENU");
         moduleChoice();
-
     }
-
 }

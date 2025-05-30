@@ -1,0 +1,2 @@
+CLT006 | karl | Asia | Dog | Shih tzu | 08/10/2016 | 8 year(s), 9 month(s), and 19 day(s) | 3.0
+CLT006 | karl | John | Cat | Persian | 02/25/2023 | 2 year(s), 3 month(s), and 4 day(s) | 3.0

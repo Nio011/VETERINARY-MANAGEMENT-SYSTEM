@@ -1,17 +1,19 @@
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
-class Dog extends Animal {
-    public Dog(String id, String name, String petName, String breed, LocalDate dateOfBirth, double weight) {
-        super(id, name, petName, "Dog" , breed, dateOfBirth, weight);
+public class Dog extends Animal {
+    public Dog(String id, String clientName, String petName, String breed, LocalDate dateOfBirth, double weight) {
+        super(id, clientName, petName, "Dog", breed, dateOfBirth, weight);
     }
 
     @Override
     public String toFileString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        return getId() + " | " + getName() + " | " + getPetName() + " | " + getSpecies() + " | " + breed + " | " + dateOfBirth.format(formatter) + " | " + getAge() + " | " + weight ;
+        return String.format("Dog | ID: %s | Client: %s | Pet: %s | Breed: %s | DOB: %s | Weight: %.2f kg | Age: %s",
+                getId(),
+                getName(),
+                getPetName(),
+                getBreed(),
+                getDateOfBirth().toString(),
+                getWeight(),
+                getAge());
     }
 }
-
-
-
