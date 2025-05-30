@@ -19,10 +19,10 @@ public class DashboardModule {
 
         switch (choice) {
             case 1:
-                ClientModule.showClientMenu(); // Assuming ClientModule exists
+                ClientModule.showClientMenu();
                 break;
             case 2:
-                AnimalModule.showAnimalMenu(c); // Pass Scanner here
+                AnimalModule.showAnimalMenu(c);
                 break;
             case 3:
             case 4:

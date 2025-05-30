@@ -243,7 +243,7 @@ public class AnimalManager {
                 } else if (species.equalsIgnoreCase("Cat")) {
                     animal = new Cat(id, clientName, petName, breed, dob, weight);
                 } else {
-                    continue; // skip unknown species
+                    continue; 
                 }
 
                 animals.add(animal);
