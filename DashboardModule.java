@@ -25,10 +25,10 @@ public class DashboardModule {
                 AnimalModule.showAnimalMenu(c);
                 break;
             case 3:
-                System.out.println("Working on it");
+                AppointmentModule.showAppointmentMenu();
                 break;
             case 4:
-                System.out.println("Working on it");
+                ServicesModule.showServicesMenu(c);
                 break;
             case 5:
                 System.out.println("Working on it");
@@ -56,9 +56,8 @@ public class DashboardModule {
 
         System.out.println("System Overview");
         System.out.println("TOTAL CLIENTS: ");
-        System.out.println("TODAY'S APPOINTMENT: ");
-        System.out.println("PENDING APPOINTMENTS: ");
-        System.out.println("TOTAL SALES: ");
+        System.out.println("TODAY'S APPOINTMENTS: " ); 
+        System.out.println("TOTAL SALES: "); 
         System.out.println();
 
         System.out.println("MENU");

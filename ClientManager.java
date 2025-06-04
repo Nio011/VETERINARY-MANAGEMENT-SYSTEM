@@ -51,6 +51,19 @@ public class ClientManager implements AdminActions {
 
                     // Update lastId
                     try {
+                    int num = Integer.parseInt(id.replaceAll("[^0-9]", ""));
+                    if (num > lastId) {
+                        lastId = num;
+                    }
+                } catch (NumberFormatException e) {
+
+                } // Para sa Id to
+
+                Client loadedClient = new Client(id, name, email, contactNum);
+                lastAddedClient = loadedClient; 
+            }
+        }
+        reader.close();
                         int num = Integer.parseInt(id.replaceAll("[^0-9]", ""));
                         if (num > lastId) lastId = num;
                     } catch (NumberFormatException ignored) {
@@ -117,6 +130,12 @@ public class ClientManager implements AdminActions {
         lastAddedClient = client;
     }
 
+         @Override
+         public void viewAll(){ //para makita sila sa client module
+            if (clients.isEmpty()){
+                System.out.println("No Clients Found");
+                return;
+            }
     @Override
     public void viewAll() {
         if (clients.isEmpty()) {

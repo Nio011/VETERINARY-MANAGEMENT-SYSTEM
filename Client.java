@@ -1,5 +1,6 @@
 public class Client {
 
+        public static int length;
         private String id;
         private String name;
         private String email;  
