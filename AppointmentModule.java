@@ -6,6 +6,7 @@ public class AppointmentModule {
 
         Scanner sc = new Scanner(System.in);
         AppointmentManager apptManager = new AppointmentManager();
+        DashboardModule dm = new DashboardModule();
 
         while (true) {
             System.out.println("\nAPPOINTMENT MANAGEMENT");
@@ -33,6 +34,9 @@ public class AppointmentModule {
                 case 5 -> apptManager.delete();
                 case 6 -> {
                     System.out.println("Exiting Appointment Module.");
+                    dm.showDashboard();
+                    sc.close();
+
                     return;
                 }
                 default -> System.out.println("Invalid choice. Try again.");

@@ -10,6 +10,7 @@ public class ClientModule {
         DashboardModule dm = new DashboardModule();
 
         cm.viewAll(); 
+
         
         while (true){
             System.out.println("CLIENT MANAGEMENT");
@@ -37,10 +38,14 @@ public class ClientModule {
                     break;
                 case 5:
                     dm.showDashboard();
+                    break;
                 default: 
                     System.out.println("Invalid choice");
 
+
             }
+
+            
 
 
 

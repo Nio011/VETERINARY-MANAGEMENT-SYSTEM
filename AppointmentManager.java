@@ -14,7 +14,7 @@ public class AppointmentManager implements AdminActions{
             return String.format("APT%03d",lastAppId);
         }
 
-    private static List<Appointment> appointments = new ArrayList<>();
+    public static List<Appointment> appointments = new ArrayList<>();
 
      static {
             try {
@@ -221,6 +221,7 @@ public class AppointmentManager implements AdminActions{
                 }
             }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void edit() {
             System.out.println("Enter Client's ID: ");
@@ -252,18 +253,72 @@ public class AppointmentManager implements AdminActions{
         }
         @Override
         public void delete() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'delete'");
+            System.out.print("Enter Client's ID to delete: ");
+                String searchId = scanner.nextLine().trim();
+
+                boolean found = false;
+                Iterator<Appointment> iterator = appointments.iterator();
+
+                while (iterator.hasNext()) {
+                    Appointment appointment = iterator.next();
+                    if (appointment.getId().equalsIgnoreCase(searchId)) {
+                        System.out.print("Are you sure you want to delete client " + appointment.getName() + " (Y/N)? ");
+                        String confirmation = scanner.nextLine().trim();
+
+                        if (confirmation.equalsIgnoreCase("Y")) {
+                            iterator.remove();
+                            overwriteFile();
+                            System.out.println("Client deleted successfully.");
+                        } else {
+                            System.out.println("Deletion cancelled.");
+                        }
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    System.out.println("Client ID not found.");
+                };
         }
+
         @Override
         public void search() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'search'");
+             System.out.print("Enter Client's ID to search: ");
+                String searchId = scanner.nextLine().trim();
+
+                boolean found = false;
+                for (Appointment appointment : appointments) {
+                    if (appointment.getId().equalsIgnoreCase(searchId)) {
+                        System.out.println("\nClient Found:");
+                        System.out.println("ID: " + appointment.getId());
+                        System.out.println("Name: " + appointment.getName());
+                        System.out.println("Species: " + appointment.getSpecies());
+                        System.out.println("Appointment Date: " + appointment.getDate());
+                        System.out.println("Appointment Time: " + appointment.getAppTime());
+                        System.out.println("Contact Number: " + appointment.getContactNum());
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    System.out.println("Client not found.");
+                }
         }
         @Override
         public void viewAll() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'viewAll'");
-        }
+            if (appointments.isEmpty()) {
+                        System.out.println("No clients found.");
+                        return;
+                    }
+
+                    System.out.println("\nList of Clients");
+                    System.out.println("===============================================");
+                    for (Appointment appointment : appointments) {
+                        System.out.println(appointment.toFileString());
+                    }
+                    System.out.println("===============================================");
+                }
             }
 
