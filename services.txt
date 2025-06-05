@@ -1,0 +1,1 @@
+grooming,300.0,cat

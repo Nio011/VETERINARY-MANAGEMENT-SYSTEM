@@ -28,7 +28,7 @@ public class DashboardModule {
                 AppointmentModule.showAppointmentMenu();
                 break;
             case 4:
-                ServicesModule.showServicesMenu(c);
+                ServicesModule.showServicesMenu();
                 break;
             case 5:
                 System.out.println("Working on it");

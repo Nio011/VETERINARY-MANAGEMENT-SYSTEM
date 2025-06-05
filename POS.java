@@ -45,7 +45,7 @@ public class POS {
         while (true) {
             System.out.print("Enter service number to add (0 to finish): ");
             int choice = sc.nextInt();
-            sc.nextLine(); // consume newline
+            sc.nextLine(); 
 
             if (choice == 0) break;
 
