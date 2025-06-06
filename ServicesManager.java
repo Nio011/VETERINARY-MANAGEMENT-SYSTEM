@@ -1,124 +1,67 @@
-import java.util.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServicesManager {
+    private static final String FILE_NAME = "services.txt";
     private List<Service> services;
 
     public ServicesManager() {
         services = new ArrayList<>();
-        loadDefaultServices();
+        loadServices();
     }
 
-    private void loadDefaultServices() {
-        // CATS
-        addService("Cat", "General Consultation", 500);
-        addService("Cat", "Follow-up Consultation", 400);
-        addService("Cat", "Anti-Rabies", 350);
-        addService("Cat", "4-in-1 Vaccine", 900);
-        addService("Cat", "Feline Leukemia (FeLV)", 1450);
-        addService("Cat", "Deworming", 450);
-        addService("Cat", "CBC", 1200);
-        addService("Cat", "Blood Chemistry", 3000);
-        addService("Cat", "Urinalysis", 800);
-        addService("Cat", "Fecalysis", 250);
-        addService("Cat", "Skin Scraping", 250);
-        addService("Cat", "X-ray", 2000);
-        addService("Cat", "Ultrasound", 850);
-        addService("Cat", "Dental Cleaning", 3500);
-        addService("Cat", "Tooth Extraction (Simple)", 300);
-        addService("Cat", "Tooth Extraction (Complicated)", 700);
-        addService("Cat", "Spay (Female)", 5000);
-        addService("Cat", "Neuter (Male)", 4000);
-        addService("Cat", "Microchipping", 150);
-        addService("Cat", "Boarding (per day)", 700);
-
-        // DOGS
-        addService("Dog", "General Consultation", 500);
-        addService("Dog", "Follow-up Consultation", 400);
-        addService("Dog", "Anti-Rabies", 350);
-        addService("Dog", "5-in-1 Vaccine", 950);
-        addService("Dog", "6-in-1 Vaccine", 1200);
-        addService("Dog", "8-in-1 Vaccine", 850);
-        addService("Dog", "Kennel Cough", 800);
-        addService("Dog", "Deworming", 500);
-        addService("Dog", "CBC", 1200);
-        addService("Dog", "Blood Chemistry", 3000);
-        addService("Dog", "Urinalysis", 800);
-        addService("Dog", "Fecalysis", 250);
-        addService("Dog", "Skin Scraping", 250);
-        addService("Dog", "Parvo Test", 1200);
-        addService("Dog", "Distemper Test", 1000);
-        addService("Dog", "Ehrlichia Test", 1000);
-        addService("Dog", "Heartworm Test", 1000);
-        addService("Dog", "X-ray", 2000);
-        addService("Dog", "Ultrasound", 850);
-        addService("Dog", "Dental Cleaning", 3500);
-        addService("Dog", "Tooth Extraction (Simple)", 300);
-        addService("Dog", "Tooth Extraction (Complicated)", 700);
-        addService("Dog", "Spay (Female)", 5000);
-        addService("Dog", "Neuter (Male)", 4000);
-        addService("Dog", "Cesarean Section", 7000);
-        addService("Dog", "Otoplasty (Ear Cropping)", 3000);
-        addService("Dog", "Heartworm Preventives (Injection)", 4500);
-        addService("Dog", "Microchipping", 150);
-        addService("Dog", "Boarding (per day)", 700);
-    }
-
-    public void viewServices() {
-        if (services.isEmpty()) {
-            System.out.println("No services available.");
-            return;
-        }
-
-        System.out.println("\nAvailable Services:");
-        for (int i = 0; i < services.size(); i++) {
-            Service s = services.get(i);
-            System.out.printf("[%d] [%s] %s - ₱%.2f%n", i + 1, s.getPetType(), s.getServiceName(), s.getPrice());
+    private void loadServices() {
+        services.clear();
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                Service service = Service.fromFileString(line);
+                services.add(service);
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading services: " + e.getMessage());
         }
     }
 
-    public void addService(String petType, String serviceName, double price) {
-        services.add(new Service(petType, serviceName, price));
-        System.out.println("Service added successfully.");
-    }
-
-    public void editService(int index, String newName, double newPrice) {
-        if (index < 1 || index > services.size()) {
-            System.out.println("Invalid service number.");
-            return;
+    private void saveServices() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_NAME))) {
+            for (Service service : services) {
+                bw.write(service.toFileString());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving services: " + e.getMessage());
         }
-        Service s = services.get(index - 1);
-        s.setServiceName(newName);
-        s.setPrice(newPrice);
-        System.out.println("Service updated successfully.");
-    }
-
-    public void deleteService(int index) {
-        if (index < 1 || index > services.size()) {
-            System.out.println("Invalid service number.");
-            return;
-        }
-        services.remove(index - 1);
-        System.out.println("Service deleted successfully.");
     }
 
     public List<Service> getAllServices() {
         return services;
     }
 
-    public List<Service> getServicesByPetType(String petType) {
-        List<Service> result = new ArrayList<>();
-        for (Service s : services) {
-            if (s.getPetType().equalsIgnoreCase(petType)) {
-                result.add(s);
-            }
-        }
-        return result;
+    public void addService(Service service) {
+        services.add(service);
+        saveServices();
+        System.out.println("Service added successfully.");
     }
 
-    public Service getServiceByIndex(int index) {
+    public void updateService(int index, Service updatedService) {
         if (index >= 0 && index < services.size()) {
-            return services.get(index);
+            services.set(index, updatedService);
+            saveServices();
+            System.out.println("Service updated successfully.");
+        } else {
+            System.out.println("Invalid service index.");
         }
-        return null;
+    }
+
+    public void deleteService(int index) {
+        if (index >= 0 && index < services.size()) {
+            services.remove(index);
+            saveServices();
+            System.out.println("Service deleted successfully.");
+        } else {
+            System.out.println("Invalid service index.");
+        }
     }
 }

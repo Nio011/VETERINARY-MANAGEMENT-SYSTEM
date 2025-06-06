@@ -28,13 +28,13 @@ public class DashboardModule {
                 AppointmentModule.showAppointmentMenu();
                 break;
             case 4:
-                ServicesModule.showServicesMenu(c);
+                ServicesModule.showServicesMenu();
                 break;
             case 5:
-                System.out.println("Working on it");
+                AllSalesModule.showAllSalesMenu(c);
                 break;
             case 6:
-                System.out.println("Working on it");
+                POSTerminal.processTransaction(); 
                 break;
             case 7:
                 System.out.println("Working on it");

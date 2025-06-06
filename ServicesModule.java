@@ -1,150 +1,76 @@
-import java.util.*;
+import java.util.List;
+import java.util.Scanner;
 
 public class ServicesModule {
-    private static Map<String, List<Service>> servicesByType = new HashMap<>();
 
-    static {
-        // Initialize services for cats and dogs only
-        servicesByType.put("cat", new ArrayList<>());
-        servicesByType.put("dog", new ArrayList<>());
+    private static ServicesManager servicesManager = new ServicesManager();
 
-        // Cat services
-        servicesByType.get("cat").add(new Service("General Consultation", 500));
-        servicesByType.get("cat").add(new Service("Follow-up Consultation", 400));
-        servicesByType.get("cat").add(new Service("Anti-Rabies", 350));
-        servicesByType.get("cat").add(new Service("4-in-1 Vaccine", 900));
-        servicesByType.get("cat").add(new Service("Feline Leukemia (FeLV)", 1450));
-        // ... Add all other cat services here ...
+    public static void showServicesMenu() {
+        Scanner sc = new Scanner(System.in);
 
-        // Dog services
-        servicesByType.get("dog").add(new Service("General Consultation", 500));
-        servicesByType.get("dog").add(new Service("Follow-up Consultation", 400));
-        servicesByType.get("dog").add(new Service("Anti-Rabies", 350));
-        servicesByType.get("dog").add(new Service("5-in-1 Vaccine", 950));
-        servicesByType.get("dog").add(new Service("6-in-1 Vaccine", 1200));
-        // ... Add all other dog services here ...
-    }
-
-    public static void showServicesMenu(Scanner sc) {
         while (true) {
             System.out.println("\n--- SERVICES MENU ---");
-            System.out.println("1. View Services");
-            System.out.println("2. Add Service");
-            System.out.println("3. Delete Service");
-            System.out.println("4. Back to Dashboard");
-            System.out.print("Enter your choice: ");
+            System.out.println("1. View All Services");
+            System.out.println("2. Add New Service");
+            System.out.println("3. Update Existing Service");
+            System.out.println("4. Delete Service");
+            System.out.println("0. Back to Dashboard");
+            System.out.print("Choose an option: ");
             int choice = sc.nextInt();
             sc.nextLine(); // consume newline
 
             switch (choice) {
                 case 1:
-                    viewServices(sc);
+                    displayServices();
                     break;
                 case 2:
-                    addService(sc);
+                    System.out.print("Enter service name: ");
+                    String name = sc.nextLine();
+                    System.out.print("Enter price: ");
+                    double price = sc.nextDouble();
+                    sc.nextLine(); // consume newline
+                    System.out.print("Enter pet type (dog/cat): ");
+                    String petType = sc.nextLine();
+                    servicesManager.addService(new Service(name, price, petType));
                     break;
                 case 3:
-                    deleteService(sc);
+                    displayServices();
+                    System.out.print("Enter the index of service to update: ");
+                    int updateIndex = sc.nextInt();
+                    sc.nextLine(); // consume newline
+                    System.out.print("Enter new service name: ");
+                    String newName = sc.nextLine();
+                    System.out.print("Enter new price: ");
+                    double newPrice = sc.nextDouble();
+                    sc.nextLine();
+                    System.out.print("Enter new pet type: ");
+                    String newType = sc.nextLine();
+                    servicesManager.updateService(updateIndex, new Service(newName, newPrice, newType));
                     break;
                 case 4:
-                    new DashboardModule().showDashboard();
+                    displayServices();
+                    System.out.print("Enter the index of service to delete: ");
+                    int deleteIndex = sc.nextInt();
+                    servicesManager.deleteService(deleteIndex);
+                    break;
+                case 0:
                     return;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println("Invalid option.");
             }
         }
     }
 
-    private static void viewServices(Scanner sc) {
-        String petType = choosePetType(sc);
-        if (petType == null) return;
-
-        List<Service> services = servicesByType.get(petType);
+    private static void displayServices() {
+        List<Service> services = servicesManager.getAllServices();
         if (services.isEmpty()) {
-            System.out.println("No services available for " + petType + ".");
-            return;
-        }
-
-        System.out.println("\n--- " + petType.toUpperCase() + " SERVICES ---");
-        for (int i = 0; i < services.size(); i++) {
-            System.out.printf("%d. %s - ₱%.2f\n", i + 1, services.get(i).getName(), services.get(i).getPrice());
-        }
-    }
-
-    private static void addService(Scanner sc) {
-        String petType = choosePetType(sc);
-        if (petType == null) return;
-
-        System.out.print("Enter new service name: ");
-        String name = sc.nextLine();
-        System.out.print("Enter price: ₱");
-        double price = sc.nextDouble();
-        sc.nextLine(); // consume newline
-
-        servicesByType.get(petType).add(new Service(name, price));
-        System.out.println("Service added successfully.");
-    }
-
-    private static void deleteService(Scanner sc) {
-        String petType = choosePetType(sc);
-        if (petType == null) return;
-
-        List<Service> services = servicesByType.get(petType);
-        if (services.isEmpty()) {
-            System.out.println("No services to delete for " + petType + ".");
-            return;
-        }
-
-        System.out.println("\n--- SELECT SERVICE TO DELETE ---");
-        for (int i = 0; i < services.size(); i++) {
-            System.out.printf("%d. %s - ₱%.2f\n", i + 1, services.get(i).getName(), services.get(i).getPrice());
-        }
-        System.out.print("Enter service number to delete: ");
-        int index = sc.nextInt();
-        sc.nextLine(); // consume newline
-
-        if (index < 1 || index > services.size()) {
-            System.out.println("Invalid selection.");
+            System.out.println("No services available.");
         } else {
-            Service removed = services.remove(index - 1);
-            System.out.println("Removed service: " + removed.getName());
-        }
-    }
-
-    private static String choosePetType(Scanner sc) {
-        System.out.println("Select pet type:");
-        System.out.println("1. Cat");
-        System.out.println("2. Dog");
-        System.out.print("Enter choice: ");
-        int typeChoice = sc.nextInt();
-        sc.nextLine(); // consume newline
-
-        switch (typeChoice) {
-            case 1:
-                return "cat";
-            case 2:
-                return "dog";
-            default:
-                System.out.println("Invalid choice.");
-                return null;
-        }
-    }
-
-    private static class Service {
-        private final String name;
-        private final double price;
-
-        public Service(String name, double price) {
-            this.name = name;
-            this.price = price;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public double getPrice() {
-            return price;
+            System.out.println("\n--- List of Services ---");
+            for (int i = 0; i < services.size(); i++) {
+                Service s = services.get(i);
+                System.out.println(i + ". " + s.getName() + " - ₱" + s.getPrice() + " [" + s.getPetType() + "]");
+            }
         }
     }
 }
