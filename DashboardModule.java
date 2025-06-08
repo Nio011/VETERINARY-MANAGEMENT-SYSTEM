@@ -31,7 +31,7 @@ public class DashboardModule {
                 ServicesModule.showServicesMenu();
                 break;
             case 5:
-                AllSalesModule.showAllSalesMenu(c);
+                //AllSalesModule.showAllSalesMenu(c);
                 break;
             case 6:
                 POSTerminal.processTransaction(); 
