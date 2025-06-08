@@ -16,6 +16,16 @@ public class ServicesManager implements AdminActions {
         return false;
     }
 
+     static {
+        try {
+            loadServicesFromFile();
+        } catch (IOException e) {
+            System.out.println("An unexpected error occurred. Could not load clients: " + e.getMessage());
+        }
+    }
+
+
+
     // Load services from file
     public static void loadServicesFromFile() throws IOException {
         services.clear();
@@ -53,7 +63,7 @@ public class ServicesManager implements AdminActions {
     }
 
     // Validating service name input
-    private String inputValidServiceName() {
+    private String inputValidServiceName() throws InputMismatchException{
         while (true) {
             System.out.print("Enter service name: ");
             String name = scanner.nextLine().trim();
@@ -84,20 +94,26 @@ public class ServicesManager implements AdminActions {
     }
 
     @Override
-    public void add() { // Add a service 
-        String name = inputValidServiceName();
+    public void add() { // Add services continuously
+        while (true) {
+            String name = inputValidServiceName();
 
-        // Use isDuplicateServiceName for duplicate check
-        if (isDuplicateServiceName(name, -1)) {
-            System.out.println("A service with this name already exists. Please use a different name.");
-            return;
+            // Use isDuplicateServiceName for duplicate check
+            if (isDuplicateServiceName(name, -1)) {
+                System.out.println("A service with this name already exists. Please use a different name.");
+            } else {
+                double price = inputValidServicePrice();
+                services.add(new Services.Service(name, price));
+                saveAllServicesToFile();
+                System.out.println("Service added successfully!");
+            }
+
+            System.out.print("Do you want to add another service? (Y/N): ");
+            String again = scanner.nextLine().trim();
+            if (!again.equalsIgnoreCase("Y")) {
+                break;
+            }
         }
-
-        double price = inputValidServicePrice();
-        services.add(new Services.Service(name, price));
-        saveAllServicesToFile();
-
-        System.out.println("Service added successfully!");
     }
 
     @Override // Edit the price of the service by name

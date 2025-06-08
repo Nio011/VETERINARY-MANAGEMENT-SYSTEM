@@ -1,2 +1,27 @@
-grooming,300.0,cat
-deworming,500.0,dog
+Consultation,450.0
+Anti Rabies,300.0
+5-in-1 Vaccine (Dogs),500.0
+6-in-1 Vaccine (Dogs),600.0
+8-in-1 Vaccine (Dogs),700.0
+4-in-1 Vaccine (Cats),600.0
+Kennel Cough Vaccine,500.0
+Deworming,450.0
+Complete Blood Count (CBC),1000.0
+Urinalysis,600.0
+Fecalysis,500.0
+Parvovirus Test,800.0
+Distemper Test,900.0
+Heartworm Test,1000.0
+Full Grooming,800.0
+Nail Trimming,200.0
+Ear Cleaning,200.0
+Teeth Brushing,400.0
+Haircut,500.0
+Tick and Flea Treatment,1000.0
+Medicated Bath,500.0
+Male Cats Castration,1000.0
+Female Cats Spaying,1500.0
+Male Dogs Castration,2000.0
+Female Dogs Spaying,3000.0
+Wound Cleaning and Dressing,300.0
+Lump or Cyst Removal (Minor Surgery),2500.0

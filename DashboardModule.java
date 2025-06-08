@@ -12,7 +12,6 @@ public class DashboardModule {
         System.out.println("4. Services");
         System.out.println("5. All Sales");
         System.out.println("6. POS");
-        System.out.println("7. Change Password");
         System.out.print("Choose 1 Option: ");
         int choice = c.nextInt();
         c.nextLine(); // consume newline
@@ -31,13 +30,10 @@ public class DashboardModule {
                 ServicesModule.showServicesMenu();
                 break;
             case 5:
-                //AllSalesModule.showAllSalesMenu(c);
+                AllSalesModule.showAllSalesMenu(c);
                 break;
             case 6:
                 POSTerminal.processTransaction(); 
-                break;
-            case 7:
-                System.out.println("Working on it");
                 break;
             default:
                 System.out.println("Invalid Choice");

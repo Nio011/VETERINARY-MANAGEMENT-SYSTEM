@@ -7,7 +7,6 @@ public class ClientManager implements AdminActions {
     public static final List<Client> clients = new ArrayList<>();
     private static int lastId = 0;
     public static Client lastAddedClient;
-    
 
 
     // Static block to load clients from file on class load
@@ -31,6 +30,10 @@ public class ClientManager implements AdminActions {
             }
         }
         return false;
+    }
+
+    public List<Client> getClients() { //FOR POS
+        return new ArrayList<>(clients);
     }
 
     // Get client name by ID
