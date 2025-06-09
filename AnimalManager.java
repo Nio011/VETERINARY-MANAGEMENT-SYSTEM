@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class AnimalManager implements AdminActions{
     private Scanner sc;
-    private List<Animal> animals;
+    List<Animal> animals;
     private int lastAnimalId = 0;
     private final String filename = "animals.txt";
 

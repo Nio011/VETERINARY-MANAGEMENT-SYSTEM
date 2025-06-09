@@ -39,7 +39,7 @@ public class POSTerminal {
             }
             System.out.println("Client Selected: " + selectedClient.getName());
 
-            // Step 2: Select Services (from services.txt, real-time total update)
+            // Step 2: Select Services from services.txt, real-time total update
             List<Services.Service> availableServices = serviceManager.getServices();
             if (availableServices.isEmpty()) {
                 System.out.println("No services available.");
@@ -94,7 +94,7 @@ public class POSTerminal {
             }
             System.out.printf("Total: ₱%.2f%n", total);
 
-            // Step 4: Confirm purchase and payment
+            // Step 4: Confirm purchase
             System.out.print("Confirm purchase? (Y/N): ");
             String confirm = sc.nextLine().trim();
             if (!confirm.equalsIgnoreCase("Y")) {
@@ -102,26 +102,7 @@ public class POSTerminal {
                 return;
             }
 
-            double payment = 0;
-            while (true) {
-                System.out.printf("Total amount due: ₱%.2f%n", total);
-                System.out.print("Enter payment amount: ₱");
-                try {
-                    payment = Double.parseDouble(sc.nextLine().trim());
-                    if (payment < total) {
-                        System.out.println("Insufficient payment. Please enter at least ₱" + String.format("%.2f", total));
-                    } else if (payment < 0) {
-                        System.out.println("Negative payment not allowed.");
-                    } else {
-                        break;
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid number.");
-                }
-            }
-            double change = payment - total;
-
-            // Step 5: Generate receipt
+            // Step 5: Generate receipt (no payment/change)
             LocalDateTime now = LocalDateTime.now();
             String dateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
@@ -136,8 +117,6 @@ public class POSTerminal {
                 servicesAndPrices.append(s.getName()).append(" ₱").append(String.format("%.2f", s.getPrice())).append("; ");
             }
             System.out.printf("Total: ₱%.2f%n", total);
-            System.out.printf("Payment: ₱%.2f%n", payment);
-            System.out.printf("Change: ₱%.2f%n", change);
 
             // Step 6: Save to AllSales.txt
             try (BufferedWriter bw = new BufferedWriter(new FileWriter("AllSales.txt", true))) {
