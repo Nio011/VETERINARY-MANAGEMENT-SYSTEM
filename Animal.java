@@ -32,6 +32,7 @@ public abstract class Animal {
     // Setters
     public void setName(String name) { this.name = name; }
     public void setPetName(String petName) { this.petName = petName; }
+    public void setSpecies(String species) { this.species = species; }
     public void setBreed(String breed) { this.breed = breed; }
     public void setDateOfBirth(LocalDate dob) { this.dateOfBirth = dob; }
     public void setWeight(double weight) { this.weight = weight; }

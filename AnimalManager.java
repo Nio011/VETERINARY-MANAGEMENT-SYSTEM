@@ -6,21 +6,54 @@ import java.util.List;
 import java.util.Scanner;
 
 public class AnimalManager implements AdminActions{
+    
     private Scanner sc;
-    List<Animal> animals;
-    private int lastAnimalId = 0;
-    private final String filename = "animals.txt";
+    private static List<Animal> animals = new ArrayList<>();
+    public static String filename = "animals.txt";
+    public ClientManager clientManager;
 
-    public AnimalManager(Scanner sc) {
+    public AnimalManager(Scanner sc, ClientManager cm) {
         this.sc = sc;
-        this.animals = new ArrayList<>();
+        this.clientManager = cm;
         loadFromFile();
     }
 
-
     public void add() {
-        System.out.print("Enter Client Name: ");
-        String clientName = sc.nextLine().trim();
+    String clientId;
+    String clientName;
+
+    while (true) {
+        System.out.print("Enter Client ID: ");
+        clientId = sc.nextLine().trim();
+
+        if (!clientManager.isClientRegistered(clientId)) {
+            System.out.println("Client ID not registered. Please register the client first.");
+            
+            // Ask user if they want to register now
+            System.out.print("Do you want to register this client now? (Y/N): ");
+            String choice = sc.nextLine().trim();
+
+            if (choice.equalsIgnoreCase("Y")) {
+                clientManager.add(); 
+                clientId = ClientManager.lastAddedClient.getId();
+                clientName = ClientManager.lastAddedClient.getName();
+                System.out.println("Client registered successfully.");
+                break;
+            } else {
+                System.out.println("Animal addition cancelled.");
+                return; 
+            }
+        } else {
+            clientName = clientManager.getClientNameById(clientId);
+            if (clientName == null) {
+                System.out.println("Error retrieving client name. Cannot proceed.");
+                return;
+            }
+            break;  
+        }
+    }
+    
+    System.out.println("Client Name: " + clientName);
 
         System.out.print("Enter Pet Name: ");
         String petName = sc.nextLine().trim();
@@ -52,20 +85,18 @@ public class AnimalManager implements AdminActions{
             return;
         }
 
-        String id = generateAnimalId();
-
         Animal animal;
         if (species.equalsIgnoreCase("Dog")) {
-            animal = new Dog(id, clientName, petName, breed, dob, weight);
+            animal = new Dog(clientId, clientName, petName, breed, dob, weight);
         } else if (species.equalsIgnoreCase("Cat")) {
-            animal = new Cat(id, clientName, petName, breed, dob, weight);
+            animal = new Cat(clientId, clientName, petName, breed, dob, weight);
         } else {
             System.out.println("Species not supported.");
             return;
         }
 
         animals.add(animal);
-        System.out.println("Animal added successfully with ID: " + id);
+        System.out.println("Animal added successfully for Client ID: " + clientId);
         saveToFile();
     }
 
@@ -81,12 +112,12 @@ public class AnimalManager implements AdminActions{
     }
 
     public void edit() {
-        System.out.print("Enter Animal ID to update: ");
-        String id = sc.nextLine().trim();
+        System.out.print("Enter Client ID to update: ");
+        String clientId = sc.nextLine().trim();
 
-        Animal animal = findAnimalById(id);
+        Animal animal = findAnimalByClientId(clientId);
         if (animal == null) {
-            System.out.println("Animal not found.");
+            System.out.println("Client ID not found.");
             return;
         }
 
@@ -138,12 +169,12 @@ public class AnimalManager implements AdminActions{
     }
 
     public void delete() {
-        System.out.print("Enter Animal ID to delete: ");
-        String id = sc.nextLine().trim();
+        System.out.print("Enter Client ID to delete: ");
+        String clientId = sc.nextLine().trim();
 
-        Animal animal = findAnimalById(id);
+        Animal animal = findAnimalByClientId(clientId);
         if (animal == null) {
-            System.out.println("Animal not found.");
+            System.out.println("Client ID not found");
             return;
         }
 
@@ -152,21 +183,30 @@ public class AnimalManager implements AdminActions{
         saveToFile();
     }
 
-    private Animal findAnimalById(String id) {
+        public static String deleteAnimalbyClientid(String clientId) {
+        boolean found = false;
+
+        // Use removeIf to delete all animals with matching client ID
+        found = animals.removeIf(a -> a.getId().equalsIgnoreCase(clientId));
+
+        if (found) {
+            saveToFile();
+            return "All animals for Client ID " + clientId + " have been deleted.";
+        } else {
+            return "No animals found for Client ID " + clientId + ".";
+        }
+    }
+
+    public static Animal findAnimalByClientId(String clientId) {
         for (Animal a : animals) {
-            if (a.getId().equalsIgnoreCase(id)) {
+            if (a.getId().equalsIgnoreCase(clientId)) {
                 return a;
             }
         }
         return null;
     }
 
-    public String generateAnimalId() {
-        lastAnimalId++;
-        return String.format("ANM%03d", lastAnimalId);
-    }
-
-    public void saveToFile() {
+    public static void saveToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (Animal a : animals) {
               
@@ -176,7 +216,7 @@ public class AnimalManager implements AdminActions{
                         a.getPetName(),
                         a.getBreed(),
                         a.getSpecies(),
-                        a.getDateOfBirth().toString(), 
+                        a.getDateOfBirth().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")),
                         a.getWeight()));
             }
         } catch (IOException e) {
@@ -185,44 +225,42 @@ public class AnimalManager implements AdminActions{
     }
 
     public void search(){
-        System.out.println("nice");
+        System.out.println("Enter Client ID to search");
+        String clientId = sc.nextLine().trim();
+        
+        Animal animal = findAnimalByClientId(clientId);
+        if (animal == null) {
+            System.out.println("Client ID not found.");
+        } else {
+            System.out.println("Animal found: " + animal.toFileString());
+        }
     }
 
-    public void loadFromFile() {
-        File file = new File(filename);
-        if (!file.exists()) {
-            return; 
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+    public static void loadFromFile() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length < 7) continue; 
+                if (parts.length < 7) continue; // Skip invalid lines
 
-                String id = parts[0];
-                String clientName = parts[1];
-                String petName = parts[2];
-                String breed = parts[3];
-                String species = parts[4];
-                LocalDate dob = LocalDate.parse(parts[5]);
-                double weight = Double.parseDouble(parts[6]);
+                String id = parts[0].trim();
+                String name = parts[1].trim();
+                String petName = parts[2].trim();
+                String breed = parts[3].trim();
+                String species = parts[4].trim();
+                LocalDate dob = LocalDate.parse(parts[5].trim(), DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+                double weight = Double.parseDouble(parts[6].trim());
 
                 Animal animal;
                 if (species.equalsIgnoreCase("Dog")) {
-                    animal = new Dog(id, clientName, petName, breed, dob, weight);
+                    animal = new Dog(id, name, petName, breed, dob, weight);
                 } else if (species.equalsIgnoreCase("Cat")) {
-                    animal = new Cat(id, clientName, petName, breed, dob, weight);
+                    animal = new Cat(id, name, petName, breed, dob, weight);
                 } else {
-                    continue; 
+                    continue; // Skip unsupported species
                 }
 
                 animals.add(animal);
-
-                try {
-                    int num = Integer.parseInt(id.replace("ANM", ""));
-                    if (num > lastAnimalId) lastAnimalId = num;
-                } catch (NumberFormatException ignored) {}
             }
         } catch (IOException e) {
             System.out.println("Error loading animals from file: " + e.getMessage());

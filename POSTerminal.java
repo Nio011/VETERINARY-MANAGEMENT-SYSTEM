@@ -102,7 +102,7 @@ public class POSTerminal {
                 return;
             }
 
-            // Step 5: Generate receipt (no payment/change)
+            // Step 5: Generate receipt
             LocalDateTime now = LocalDateTime.now();
             String dateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 

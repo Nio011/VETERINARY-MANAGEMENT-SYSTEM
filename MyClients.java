@@ -550,6 +550,13 @@ public class MyClients implements ActionListener {
             panelAddPet.setVisible(false);
             panelEdit.setVisible(true);
         }
+        if (e.getSource() == view) {
+            panad.setVisible(false);
+            panelSearch.setVisible(false);
+            panelDelete.setVisible(false);
+            panelEdit.setVisible(false);
+            panelAddPet.setVisible(false);
+        }
 
         // Add Client
         if (e.getSource() == submit) {

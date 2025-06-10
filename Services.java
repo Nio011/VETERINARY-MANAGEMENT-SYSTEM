@@ -23,5 +23,21 @@ public class Services {
     }
 }
 
+    public Services(String serviceName, double price) {
+        Services service = new Services(serviceName, price);
+        // You can
+  
+    }
+
+    public String getServiceName() {
+        // Return a default value or implement as needed
+        return "";
+    }
+
+    public double getPrice() {
+        // Return a default value or implement as needed
+        return 0.0;
+    }
+
     
 }
