@@ -1,12 +1,15 @@
+//this handles all the services related actions
+// This class manages all services, allowing adding, editing, deleting, searching, and viewing them.
+
 import java.io.*;
 import java.util.*;
 
 public class ServicesManager implements AdminActions {
 
-    private static List<Services.Service> services = new ArrayList<>();
+    private static List<MyServices.Services> services = new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
 
-    // Helper to check for duplicate service name (ignoreIndex = -1 for add, or index to ignore for edit)
+    //Check for duplicate service name 
     private boolean isDuplicateServiceName(String name, int ignoreIndex) {
         for (int i = 0; i < services.size(); i++) {
             if (i != ignoreIndex && services.get(i).getName().equalsIgnoreCase(name)) {
@@ -16,15 +19,13 @@ public class ServicesManager implements AdminActions {
         return false;
     }
 
-     static {
+     static { // Static block to load services from file when the class is loaded
         try {
             loadServicesFromFile();
         } catch (IOException e) {
             System.out.println("An unexpected error occurred. Could not load clients: " + e.getMessage());
         }
     }
-
-
 
     // Load services from file
     public static void loadServicesFromFile() throws IOException {
@@ -36,7 +37,7 @@ public class ServicesManager implements AdminActions {
             String line;
             while ((line = reader.readLine()) != null) {
                 try {
-                    Services.Service service = Services.Service.fromFileString(line);
+                    MyServices.Services service = MyServices.Services.fromFileString(line);
                     services.add(service);
                 } catch (Exception e) {
                     System.out.println("Skipping invalid line: " + line);
@@ -48,7 +49,7 @@ public class ServicesManager implements AdminActions {
     // Save all services to file
     public static void saveAllServicesToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("services.txt"))) {
-            for (Services.Service service : services) {
+            for (MyServices.Services service : services) {
                 writer.write(service.toFileString());
                 writer.newLine();
             }
@@ -58,7 +59,7 @@ public class ServicesManager implements AdminActions {
     }
 
     // For GUI or other classes to get the list
-    public static List<Services.Service> getServices() {
+    public static List<MyServices.Services> getServices() {
         return new ArrayList<>(services);
     }
 
@@ -103,7 +104,7 @@ public class ServicesManager implements AdminActions {
                 System.out.println("A service with this name already exists. Please use a different name.");
             } else {
                 double price = inputValidServicePrice();
-                services.add(new Services.Service(name, price));
+                services.add(new MyServices.Services(name, price));
                 saveAllServicesToFile();
                 System.out.println("Service added successfully!");
             }
@@ -123,7 +124,7 @@ public class ServicesManager implements AdminActions {
         boolean found = false;
 
         for (int i = 0; i < services.size(); i++) {
-            Services.Service service = services.get(i);
+            MyServices.Services service = services.get(i);
             if (service.getName().equalsIgnoreCase(target)) {
                 System.out.println("Editing service: " + service.getName());
                 String newName = inputValidServiceName();
@@ -135,7 +136,7 @@ public class ServicesManager implements AdminActions {
                 }
 
                 double newPrice = inputValidServicePrice();
-                services.set(i, new Services.Service(newName, newPrice));
+                services.set(i, new MyServices.Services(newName, newPrice));
                 saveAllServicesToFile();
                 System.out.println("Service updated.");
                 found = true;
@@ -152,11 +153,11 @@ public class ServicesManager implements AdminActions {
     public void delete() {
         System.out.print("Enter service name to delete: ");
         String target = scanner.nextLine().trim();
-        Iterator<Services.Service> iterator = services.iterator();
+        Iterator<MyServices.Services> iterator = services.iterator();
         boolean found = false;
 
         while (iterator.hasNext()) {
-            Services.Service service = iterator.next();
+            MyServices.Services service = iterator.next();
             if (service.getName().equalsIgnoreCase(target)) {
                 System.out.print("Are you sure you want to delete " + service.getName() + "? (Y/N): ");
                 String confirm = scanner.nextLine();
@@ -183,7 +184,7 @@ public class ServicesManager implements AdminActions {
         String target = scanner.nextLine().trim();
         boolean found = false;
 
-        for (Services.Service service : services) {
+        for (MyServices.Services service : services) {
             if (service.getName().equalsIgnoreCase(target)) {
                 System.out.println("Service Found:");
                 System.out.println("Name: " + service.getName());
@@ -205,7 +206,7 @@ public class ServicesManager implements AdminActions {
         } else {
             System.out.println("\nList of Services:");
             System.out.println("===================================");
-            for (Services.Service service : services) {
+            for (MyServices.Services service : services) {
                 System.out.println("Name: " + service.getName() + " | Price: ₱" + service.getPrice());
             }
             System.out.println("===================================");

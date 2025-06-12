@@ -1,12 +1,13 @@
+//This is the part where you can view, edit, and manage pet details in the veterinary system. It allows you to view all pets, edit their details, and manage records.
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MyPetDets implements ActionListener {
-
     JFrame frame = new JFrame();
-    JButton dash,clients,petdet,appoint,pas,alls,pos, logout, view, add,submit2,sEditP,sEditP2,edit,viewRecord,submit3;
+    JButton dash,clients,petdet,appoint,pas,alls,pos, logout, view, add,submit2,sEditP,sEditP2,edit,submit3;
     JPanel panel,panelAddPet, panelEdit, panelEditProcess,panelRecord;
     JTextField on2,enEdit, enPetName, enSpecies, enBreed, enDateofBirth, enWeight,enClientRecord;
     JLabel label2, printPetDetails, lEditP, lEditP2, lRecord;
@@ -23,12 +24,12 @@ public class MyPetDets implements ActionListener {
         panel.setLayout(null);
 
         panelEdit = new JPanel();
-        panelEdit.setBackground(new Color(	104, 77, 244));
+        panelEdit.setBackground(new Color(	245, 145, 145));
         panelEdit.setBounds(475, 50, 365,165);
         panelEdit.setLayout(null);
 
         panelEditProcess = new JPanel();
-        panelEditProcess.setBackground(new Color(	104, 77, 244));
+        panelEditProcess.setBackground(new Color(	245, 145, 145));
         panelEditProcess.setBounds(475, 50, 450,350);
         panelEditProcess.setLayout(null);
 
@@ -153,7 +154,7 @@ public class MyPetDets implements ActionListener {
         dash.setBounds(30, 50, 120, 20);
         dash.setFocusable(false);
         dash.setFont(new Font("Tahoma", Font.BOLD, 12));
-        dash.setForeground(Color.RED);
+        dash.setForeground(Color.BLACK);
         dash.setContentAreaFilled(false);
         dash.setBorderPainted(false);
         dash.setOpaque(false);
@@ -184,7 +185,7 @@ public class MyPetDets implements ActionListener {
         petdet.setBounds(30, 130, 140, 20);
         petdet.setFocusable(false);
         petdet.setFont(new Font("Tahoma", Font.BOLD, 12));
-        petdet.setForeground(Color.BLACK);
+        petdet.setForeground(Color.RED);
         petdet.setContentAreaFilled(false);
         petdet.setBorderPainted(false);
         petdet.setOpaque(false);
@@ -271,9 +272,7 @@ public class MyPetDets implements ActionListener {
         edit.addActionListener(this);
         edit.setBounds(225,125,125,50);
 
-        viewRecord = new JButton("View Record");
-        viewRecord.addActionListener(this);
-        viewRecord.setBounds(225,200,125,50);
+        
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
@@ -297,7 +296,6 @@ public class MyPetDets implements ActionListener {
         panel.add(logout);
         frame.add(view);
         frame.add(edit);
-        frame.add(viewRecord);
         frame.add(panelEdit);
 
         panelEdit.add(lEditP);
@@ -344,13 +342,15 @@ public class MyPetDets implements ActionListener {
         }
         if(e.getSource()==pas){
             frame.dispose();
-            MyProductsServices myProductsServices=new MyProductsServices();
+            MyVetServices myVetServices = new MyVetServices();
         }
         if(e.getSource()==alls){
             frame.dispose();
             MySales mySales=new MySales();
         }
         if (e.getSource() == pos) {
+            frame.dispose();
+            MyPos myPos = new MyPos();
         }
 
         if (e.getSource() == logout) {
@@ -513,73 +513,6 @@ public class MyPetDets implements ActionListener {
             AnimalManager.saveToFile();
             panelEditProcess.setVisible(false);
             panelEdit.setVisible(false);
-        }
-        if(e.getSource()==viewRecord){
-            panelRecord.setVisible(true);
-            panelEdit.setVisible(false);
-
-
-        }
-        if(e.getSource()==submit3){
-            String clientId = enClientRecord.getText().trim();
-            Animal animal = null;
-
-            // Always reload animals from file to ensure up-to-date data
-            AnimalManager.animals.clear();
-            AnimalManager.loadFromFile();
-            java.util.List<Animal> animals = AnimalManager.animals;
-
-            if (animals != null) {
-            for (Animal a : animals) {
-                if (a.getId().equalsIgnoreCase(clientId)) {
-                animal = a;
-                break;
-                }
-            }
-            }
-
-            if (animal == null) {
-            JOptionPane.showMessageDialog(frame, "Client ID not found.");
-            return;
-            }
-
-            // Calculate age
-            String ageStr = "";
-            try {
-            java.time.LocalDate dob = animal.getDateOfBirth();
-            java.time.Period age = java.time.Period.between(dob, java.time.LocalDate.now());
-            ageStr = String.format("%d years, %d months, %d days", age.getYears(), age.getMonths(), age.getDays());
-            } catch (Exception ex) {
-            ageStr = "Unknown";
-            }
-
-            // Build a nicely formatted record using plain text and some ASCII design
-            StringBuilder sb = new StringBuilder();
-            sb.append("========================================\n");
-            sb.append("             PET DETAILS\n");
-            sb.append("========================================\n");
-            sb.append(String.format("%-15s: %s\n", "Pet Name", animal.getPetName()));
-            sb.append(String.format("%-15s: %s\n", "Species", animal.getSpecies()));
-            sb.append(String.format("%-15s: %s\n", "Breed", animal.getBreed()));
-            sb.append(String.format("%-15s: %s\n", "Date of Birth", animal.getDateOfBirth()));
-            sb.append(String.format("%-15s: %s\n", "Age", ageStr));
-            sb.append(String.format("%-15s: %s kg\n", "Weight", animal.getWeight()));
-            sb.append("----------------------------------------\n");
-            sb.append("            OWNER DETAILS\n");
-            sb.append("----------------------------------------\n");
-            sb.append(String.format("%-15s: %s\n", "Owner ID", animal.getId()));
-            sb.append(String.format("%-15s: %s\n", "Owner Name", animal.getName()));
-            sb.append("========================================");
-
-            JTextArea textArea = new JTextArea(sb.toString());
-            textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-            textArea.setEditable(false);
-            textArea.setCaretPosition(0);
-
-            JScrollPane scrollPane = new JScrollPane(textArea);
-            scrollPane.setPreferredSize(new Dimension(400, 300));
-
-            JOptionPane.showMessageDialog(frame, scrollPane, "Client Record", JOptionPane.INFORMATION_MESSAGE);
         }
         
     }   

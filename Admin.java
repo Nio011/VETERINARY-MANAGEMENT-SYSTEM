@@ -1,18 +1,13 @@
+ //Admin Class
+// This class represents an admin user with a username and password.
+// It provides methods for logging in and changing the password.
+ 
  class Admin {
-    private final String username = "admin"; 
-    private String pass = "admin123"; 
+    private final String username = "admin"; // admin username
+    private String pass = "admin123"; //admin password
 
     public boolean login (String username, String pass){ //method for log in
         return this.username.equals(username) && this.pass.equals(pass);
-    }
-
-    public void changePass (String oldPass, String newPass){ //method for changing password 
-        if (pass.equals(oldPass)){
-            pass = newPass;
-            System.out.println("Password changed successfully");
-        } else {
-            System.out.println ("Incorrect password. Password not change");
-        }
     }
 
 

@@ -1,3 +1,5 @@
+//GUI for managing clients
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,10 +18,14 @@ public class MyClients implements ActionListener {
 
     // TextFields
     JTextField on, ea, cn, on1, ea1, cn1, enSearch, enDelete, enEdit, enPetName, enSpecies, enBreed, enDateofBirth, enWeight;
+
+    Appointment appt = null;
+
     public MyClients() {
         ImageIcon icon = new ImageIcon("LOGO.png");
         Image img = icon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
         icon = new ImageIcon(img);
+
         // Labels
         label = new JLabel("Add a Client");
         label.setFont(new Font("Alice", Font.BOLD, 25));
@@ -50,76 +56,70 @@ public class MyClients implements ActionListener {
         label7.setBounds(185, 5, 150, 50);
 
         // TextFields for Add Client
-        on = new JTextField();
-        on.setText("Owner Name");
+        on = new JTextField("Owner Name");
         on.setBounds(105, 75, 250, 40);
         on.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (on.isEnabled() && on.getText().equals("Owner Name")) {
-                on.setText("");
-            }
+                if (on.isEnabled() && on.getText().equals("Owner Name")) {
+                    on.setText("");
+                }
             }
         });
 
-        ea = new JTextField();
-        ea.setText("Email Address");
+        ea = new JTextField("Email Address");
         ea.setBounds(105, 125, 250, 40);
         ea.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (ea.isEnabled() && ea.getText().equals("Email Address")) {
-                ea.setText("");
-            }
+                if (ea.isEnabled() && ea.getText().equals("Email Address")) {
+                    ea.setText("");
+                }
             }
         });
 
-        cn = new JTextField();
-        cn.setText("Contact Number");
+        cn = new JTextField("Contact Number");
         cn.setBounds(105, 175, 250, 40);
         cn.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (cn.isEnabled() && cn.getText().equals("Contact Number")) {
-                cn.setText("");
-            }
+                if (cn.isEnabled() && cn.getText().equals("Contact Number")) {
+                    cn.setText("");
+                }
             }
         });
 
         // TextFields for Edit Client
-        on1 = new JTextField();
-        on1.setText("Owner Name");
+        on1 = new JTextField("Owner Name");
         on1.setBounds(105, 75, 250, 40);
         on1.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (on1.isEnabled() && on1.getText().equals("Owner Name")) {
-                on1.setText("");
-            }
+                if (on1.isEnabled() && on1.getText().equals("Owner Name")) {
+                    on1.setText("");
+                }
             }
         });
 
-        ea1 = new JTextField();
-        ea1.setText("Email Address");
+        ea1 = new JTextField("Email Address");
         ea1.setBounds(105, 125, 250, 40);
         ea1.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (ea1.isEnabled() && ea1.getText().equals("Email Address")) {
-                ea1.setText("");
-            }
+                if (ea1.isEnabled() && ea1.getText().equals("Email Address")) {
+                    ea1.setText("");
+                }
             }
         });
 
-        cn1 = new JTextField();
-        cn1.setText("Contact Number");
+        cn1 = new JTextField("Contact Number");
         cn1.setBounds(105, 175, 250, 40);
         cn1.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (cn1.isEnabled() && cn1.getText().equals("Contact Number")) {
-                cn1.setText("");
-            }
+                if (cn1.isEnabled() && cn1.getText().equals("Contact Number")) {
+                    cn1.setText("");
+                }
             }
         });
 
@@ -181,100 +181,92 @@ public class MyClients implements ActionListener {
         panelAddPet.setLayout(null);
 
         // TextFields for Search/Delete/Edit
-        enSearch = new JTextField();
-        enSearch.setText("Enter Client's ID to search: ");
+        enSearch = new JTextField("Enter Client's ID to search: ");
         enSearch.setBounds(57, 55, 250, 40);
         enSearch.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (enSearch.isEnabled() && enSearch.getText().equals("Enter Client's ID to search: ")) {
-                enSearch.setText("");
-            }
+                if (enSearch.isEnabled() && enSearch.getText().equals("Enter Client's ID to search: ")) {
+                    enSearch.setText("");
+                }
             }
         });
 
-        enDelete = new JTextField();
-        enDelete.setText("Enter Client's ID to Delete: ");
+        enDelete = new JTextField("Enter Client's ID to Delete: ");
         enDelete.setBounds(57, 55, 250, 40);
         enDelete.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (enDelete.isEnabled() && enDelete.getText().equals("Enter Client's ID to Delete: ")) {
-                enDelete.setText("");
-            }
+                if (enDelete.isEnabled() && enDelete.getText().equals("Enter Client's ID to Delete: ")) {
+                    enDelete.setText("");
+                }
             }
         });
 
-        enEdit = new JTextField();
-        enEdit.setText("Enter Client's ID to Edit: ");
+        enEdit = new JTextField("Enter Client's ID to Edit: ");
         enEdit.setBounds(57, 55, 250, 40);
         enEdit.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (enEdit.isEnabled() && enEdit.getText().equals("Enter Client's ID to Edit: ")) {
-                enEdit.setText("");
-            }
+                if (enEdit.isEnabled() && enEdit.getText().equals("Enter Client's ID to Edit: ")) {
+                    enEdit.setText("");
+                }
             }
         });
 
         // TextFields for Add Pet
-        enPetName = new JTextField();
-        enPetName.setText("Pet Name");
+        enPetName = new JTextField("Pet Name");
         enPetName.setBounds(100, 55, 250, 40);
         enPetName.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (enPetName.isEnabled() && enPetName.getText().equals("Pet Name")) {
-                enPetName.setText("");
-            }
+                if (enPetName.isEnabled() && enPetName.getText().equals("Pet Name")) {
+                    enPetName.setText("");
+                }
             }
         });
 
-        enSpecies = new JTextField();
-        enSpecies.setText("Species(Dog/Cat)");
+        enSpecies = new JTextField("Species(Dog/Cat)");
         enSpecies.setBounds(100, 105, 250, 40);
         enSpecies.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (enSpecies.isEnabled() && enSpecies.getText().equals("Species(Dog/Cat)")) {
-                enSpecies.setText("");
-            }
+                if (enSpecies.isEnabled() && enSpecies.getText().equals("Species(Dog/Cat)")) {
+                    enSpecies.setText("");
+                }
             }
         });
 
-        enBreed = new JTextField();
-        enBreed.setText("Breed");
+        enBreed = new JTextField("Breed");
         enBreed.setBounds(100, 155, 250, 40);
         enBreed.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (enBreed.isEnabled() && enBreed.getText().equals("Breed")) {
-                enBreed.setText("");
-            }
+                if (enBreed.isEnabled() && enBreed.getText().equals("Breed")) {
+                    enBreed.setText("");
+                }
             }
         });
 
-        enDateofBirth = new JTextField();
-        enDateofBirth.setText("Date of Birth");
+        enDateofBirth = new JTextField("Date of Birth (MM/dd/yyyy)");
         enDateofBirth.setBounds(100, 205, 250, 40);
         enDateofBirth.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (enDateofBirth.isEnabled() && enDateofBirth.getText().equals("Date of Birth")) {
-                enDateofBirth.setText("");
-            }
+                if (enDateofBirth.isEnabled() && enDateofBirth.getText().equals("Date of Birth (MM/dd/yyyy)")) {
+                    enDateofBirth.setText("");
+                }
             }
         });
 
-        enWeight = new JTextField();
-        enWeight.setText("Weight in kg");
+        enWeight = new JTextField("Weight in kg");
         enWeight.setBounds(100, 255, 250, 40);
         enWeight.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (enWeight.isEnabled() && enWeight.getText().equals("Weight in kg")) {
-                enWeight.setText("");
-            }
+                if (enWeight.isEnabled() && enWeight.getText().equals("Weight in kg")) {
+                    enWeight.setText("");
+                }
             }
         });
 
@@ -292,9 +284,9 @@ public class MyClients implements ActionListener {
         dash.setHorizontalAlignment(SwingConstants.LEFT);
         panel.add(dash);
 
-        JSeparator sep1 = new JSeparator(); //LINE 
+        JSeparator sep1 = new JSeparator();
         sep1.setBounds(45, 85, 120, 1);
-        sep1.setForeground(Color.RED); 
+        sep1.setForeground(Color.RED);
         panel.add(sep1);
 
         clients = new JButton("Clients");
@@ -307,8 +299,7 @@ public class MyClients implements ActionListener {
         clients.setBorderPainted(false);
         clients.setOpaque(false);
         clients.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        clients.setHorizontalAlignment(SwingConstants.LEFT); 
-
+        clients.setHorizontalAlignment(SwingConstants.LEFT);
 
         petdet = new JButton("Pet Details");
         petdet.addActionListener(this);
@@ -320,7 +311,7 @@ public class MyClients implements ActionListener {
         petdet.setBorderPainted(false);
         petdet.setOpaque(false);
         petdet.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        petdet.setHorizontalAlignment(SwingConstants.LEFT); 
+        petdet.setHorizontalAlignment(SwingConstants.LEFT);
 
         appoint = new JButton("Appointments");
         appoint.addActionListener(this);
@@ -332,11 +323,11 @@ public class MyClients implements ActionListener {
         appoint.setBorderPainted(false);
         appoint.setOpaque(false);
         appoint.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        appoint.setHorizontalAlignment(SwingConstants.LEFT); 
+        appoint.setHorizontalAlignment(SwingConstants.LEFT);
 
-        JSeparator sep2 = new JSeparator(); //LINE 
+        JSeparator sep2 = new JSeparator();
         sep2.setBounds(45, 195, 120, 1);
-        sep2.setForeground(Color.RED); 
+        sep2.setForeground(Color.RED);
         panel.add(sep2);
 
         pas = new JButton("Services");
@@ -349,7 +340,7 @@ public class MyClients implements ActionListener {
         pas.setBorderPainted(false);
         pas.setOpaque(false);
         pas.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        pas.setHorizontalAlignment(SwingConstants.LEFT); 
+        pas.setHorizontalAlignment(SwingConstants.LEFT);
 
         alls = new JButton("All Sales");
         alls.addActionListener(this);
@@ -361,7 +352,7 @@ public class MyClients implements ActionListener {
         alls.setBorderPainted(false);
         alls.setOpaque(false);
         alls.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        alls.setHorizontalAlignment(SwingConstants.LEFT); 
+        alls.setHorizontalAlignment(SwingConstants.LEFT);
 
         pos = new JButton("POS");
         pos.addActionListener(this);
@@ -373,11 +364,11 @@ public class MyClients implements ActionListener {
         pos.setBorderPainted(false);
         pos.setOpaque(false);
         pos.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        pos.setHorizontalAlignment(SwingConstants.LEFT); 
+        pos.setHorizontalAlignment(SwingConstants.LEFT);
 
-        JSeparator sep3 = new JSeparator(); //LINE 
+        JSeparator sep3 = new JSeparator();
         sep3.setBounds(45, 295, 120, 1);
-        sep3.setForeground(Color.RED); 
+        sep3.setForeground(Color.RED);
         panel.add(sep3);
 
         logout = new JButton("Log Out");
@@ -391,7 +382,7 @@ public class MyClients implements ActionListener {
         logout.setOpaque(false);
         logout.setCursor(new Cursor(Cursor.HAND_CURSOR));
         logout.setHorizontalAlignment(SwingConstants.LEFT);
-        panel.add(logout); 
+        panel.add(logout);
 
         // Main Action Buttons
         add = new JButton("Add Client");
@@ -495,23 +486,23 @@ public class MyClients implements ActionListener {
         // Navigation
         if (e.getSource() == dash) {
             frame.dispose();
-            MyDashboard myDashboard = new MyDashboard();
+            new MyDashboard();
         }
         if (e.getSource() == petdet) {
             frame.dispose();
-            MyPetDets myPetDetails = new MyPetDets();
+            new MyPetDets();
         }
         if (e.getSource() == appoint) {
             frame.dispose();
-            MyAppointments myAppointments = new MyAppointments();
+            new MyAppointments();
         }
         if (e.getSource() == pas) {
             frame.dispose();
-            MyProductsServices myProductsServices = new MyProductsServices();
+            MyVetServices myVetServices = new MyVetServices();
         }
         if (e.getSource() == alls) {
             frame.dispose();
-            MySales mySales = new MySales();
+            new MySales();
         }
         if (e.getSource() == pos) {
             frame.dispose();
@@ -519,9 +510,10 @@ public class MyClients implements ActionListener {
         }
         if (e.getSource() == logout) {
             frame.dispose();
-            MyFrame myFrame = new MyFrame();
+            new MyFrame();
         }
-     // Show/Hide Panels
+
+        // Show/Hide Panels
         if (e.getSource() == add) {
             panelSearch.setVisible(false);
             panelDelete.setVisible(false);
@@ -550,13 +542,6 @@ public class MyClients implements ActionListener {
             panelAddPet.setVisible(false);
             panelEdit.setVisible(true);
         }
-        if (e.getSource() == view) {
-            panad.setVisible(false);
-            panelSearch.setVisible(false);
-            panelDelete.setVisible(false);
-            panelEdit.setVisible(false);
-            panelAddPet.setVisible(false);
-        }
 
         // Add Client
         if (e.getSource() == submit) {
@@ -564,23 +549,37 @@ public class MyClients implements ActionListener {
             String email = ea.getText().trim();
             String contactNum = cn.getText().trim();
 
+            // First check if any field is empty
             if (name.isEmpty() || email.isEmpty() || contactNum.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Please fill all fields");
-            } else {
-                String id = ClientManager.generateClientId();
-                Client client = new Client(id, name, email, contactNum);
+                return;
+            } 
 
-                // Add to list and save
-                ClientManager.clients.add(client);
-                ClientManager.saveClient(client);
+            // Now check for specific validation errors
+            if (!name.isEmpty() && !email.isEmpty() && !contactNum.isEmpty()) {
+                if (!email.endsWith("@gmail.com")) {
+                    JOptionPane.showMessageDialog(frame, "Email must end with @gmail.com.");
+                    return;
+                }
+                if (!contactNum.matches("\\d{11}")) {
+                    JOptionPane.showMessageDialog(frame, "Contact number must be exactly 11 digits.");
+                    return;
+                }
+            
+                try {
+                    String id = ClientManager.generateClientId();
+                    Client client = new Client(id, name, email, contactNum);
 
-                ClientManager.lastAddedClient = client;
+                    ClientManager.clients.add(client);
+                    ClientManager.saveClient(client);
+                    ClientManager.lastAddedClient = client;
 
-                JOptionPane.showMessageDialog(frame, "Client added successfully:\nName: " + name + "\nEmail: " + email + "\nContact: " + contactNum + "\nClient ID: " + id);
-                panad.setVisible(false);
-
-                
-                panelAddPet.setVisible(true);
+                    JOptionPane.showMessageDialog(frame, "Client added successfully:\nName: " + name + "\nEmail: " + email + "\nContact: " + contactNum + "\nClient ID: " + id);
+                    panad.setVisible(false);
+                    panelAddPet.setVisible(true);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage());
+                }
             }
         }
 
@@ -598,13 +597,16 @@ public class MyClients implements ActionListener {
                 return;
             }
 
-            // Validate date format
+            // Validate date format and check if not in the future
             java.time.LocalDate dob;
             try {
                 java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("MM/dd/yyyy");
                 dob = java.time.LocalDate.parse(dateOfBirth, formatter);
+                if (dob.isAfter(java.time.LocalDate.now())) {
+                    throw new Exception("Date of birth cannot be in the future.");
+                }
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Invalid date format. Please use MM/dd/yyyy.");
+                JOptionPane.showMessageDialog(frame, "Invalid date: " + ex.getMessage() + " Please use MM/dd/yyyy.");
                 return;
             }
 
@@ -634,9 +636,187 @@ public class MyClients implements ActionListener {
                 return;
             }
 
+            // Add animal to the list and save
+            if (AnimalManager.animals == null) {
+                AnimalManager.animals = new java.util.ArrayList<>();
+            }
+            AnimalManager.animals.add(animal);
+            try {
+                AnimalManager.saveToFile();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error saving pet: " + ex.getMessage());
+            }
 
+            JOptionPane.showMessageDialog(frame, "Pet added successfully:\nName: " + petName + "\nSpecies: " + species + "\nBreed: " + breed + "\nDOB: " + dateOfBirth + "\nWeight: " + weight + " kg");
+            panelAddPet.setVisible(false);
+
+            // Optionally reset fields
+            enPetName.setText("Pet Name");
+            enSpecies.setText("Species(Dog/Cat)");
+            enBreed.setText("Breed");
+            enDateofBirth.setText("Date of Birth");
+            enWeight.setText("Weight in kg");
+        }
+
+        // Search Client
+        if (e.getSource() == sSearch) {
+            if (enSearch.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Please enter a Client ID to search");
+            } else {
+                String searchId = enSearch.getText().trim();
+                Client foundClient = ClientManager.findClientbyId(searchId);
+
+                if (foundClient != null) {
+                    panelSearch.setVisible(false);
+                    JOptionPane.showMessageDialog(frame, "Client found:\nID: " + foundClient.getId() + "\nName: " + foundClient.getName() + "\nEmail: " + foundClient.getEmail() + "\nContact: " + foundClient.getContactNum());
+                } else {
+                    panelSearch.setVisible(false);
+                    JOptionPane.showMessageDialog(frame, "No client found with ID: " + searchId);
+                }
+            }
+        }
+
+        // Delete Client
+        if (e.getSource() == sDelete) {
+            if (enDelete.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Please enter a Client ID to delete");
+            } else {
+                String deleteId = enDelete.getText().trim();
+                Client foundClient = ClientManager.findClientbyId(deleteId);
+
+                if (foundClient != null) {
+                    int confirm = JOptionPane.showConfirmDialog(frame,
+                            "Are you sure you want to delete client " + foundClient.getName() + "?",
+                            "Confirm Delete", JOptionPane.YES_NO_OPTION);
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        // Delete client
+                        ClientManager.deleteClientById(deleteId);
+
+                        // Remove all animals belonging to this client and update animals.txt
+                        if (AnimalManager.animals != null) {
+                            AnimalManager.animals.removeIf(animal -> animal.getOwnerId().equals(deleteId));
+                        }
+                        try {
+                            AnimalManager.saveToFile();
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(frame, "Error updating animals.txt: " + ex.getMessage());
+                        }
+
+                        // Also use the new deleteAnimalbyClientid logic
+                        String animalDeleteMsg = AnimalManager.deleteAnimalbyClientid(deleteId);
+
+                        panelDelete.setVisible(false);
+                        JOptionPane.showMessageDialog(frame, "Client and their pets deleted successfully:\nID: " + foundClient.getId() + "\nName: " + foundClient.getName() + "\n" + animalDeleteMsg);
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Deletion cancelled.");
+                    }
+                } else {
+                    panelDelete.setVisible(false);
+                    JOptionPane.showMessageDialog(frame, "No client found with ID: " + deleteId);
+                }
+            }
+        }
+
+        // Edit Client
+        if (e.getSource() == sEdit) {
+            if (enEdit.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Please enter a Client ID to edit");
+            } else {
+                String editId = enEdit.getText().trim();
+                Client foundClient = ClientManager.findClientbyId(editId);
+
+                if (foundClient != null) {
+                    panelEdit.setVisible(false);
+                    panelEditProcess.setVisible(true);
+                    // Pre-fill the fields with current client data
+                    on1.setText(foundClient.getName());
+                    ea1.setText(foundClient.getEmail());
+                    cn1.setText(foundClient.getContactNum());
+                } else {
+                    JOptionPane.showMessageDialog(frame, "No client found with ID: " + editId);
+                }
+            }
+        }
+        if (e.getSource() == sEdit2) {
+            String newName = on1.getText().trim();
+            String newEmail = ea1.getText().trim();
+            String newContactNum = cn1.getText().trim();
+            String editId = enEdit.getText().trim();
+
+            if (newName.isEmpty() || newEmail.isEmpty() || newContactNum.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Please fill all fields");
+            } else {
+                try {
+                    // Validate email and contact number
+                    if (!newEmail.endsWith("@gmail.com")) {
+                        throw new Exception("Email must end with @gmail.com.");
+                    }
+                    if (!newContactNum.matches("\\d{11}")) {
+                        throw new Exception("Contact number must be exactly 11 digits.");
+                    }
+                    // Find the client and update its fields directly
+                    Client foundClient = ClientManager.findClientbyId(editId);
+                    if (foundClient != null) {
+                        foundClient.setName(newName);
+                        foundClient.setEmail(newEmail);
+                        foundClient.setContactNum(newContactNum);
+                        // Save all clients to file
+                        ClientManager.saveAllClientsToFile();
+                        panelEditProcess.setVisible(false);
+                        // Optionally reset fields
+                        on1.setText("Owner Name");
+                        ea1.setText("Email Address");
+                        cn1.setText("Contact Number");
+                        JOptionPane.showMessageDialog(frame, "Client updated successfully:\nID: " + editId + "\nName: " + newName + "\nEmail: " + newEmail + "\nContact: " + newContactNum);
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "No client found with ID: " + editId);
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage());
+                }
+            }
+        }
+
+        // View Clients
+        if (e.getSource() == view) {
+            panelSearch.setVisible(false);
+            panelDelete.setVisible(false);
+            panelEdit.setVisible(false);
+            panelAddPet.setVisible(false);
+            panad.setVisible(false);
+
+            // Always reload the client list from file before displaying
+            ClientManager.reloadClientsFromFile();
+
+            java.util.List<Client> clients = ClientManager.clients;
+            if (clients == null || clients.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "No clients found.");
+                return;
+            }
+
+            // Build a plain text table with better alignment
+            StringBuilder clientList = new StringBuilder();
+            String format = "%-12s %-20s %-30s %-15s%n";
+            clientList.append(String.format(format, "ID", "Name", "Email", "Contact No."));
+            clientList.append("-------------------------------------------------------------------------------\n");
+            for (Client c : clients) {
+                clientList.append(String.format(format,
+                        c.getId(),
+                        c.getName(),
+                        c.getEmail(),
+                        c.getContactNum()
+                ));
+            }
+
+            JTextArea textArea = new JTextArea(clientList.toString());
+            textArea.setFont(new Font("Monospaced", Font.PLAIN, 13));
+            textArea.setEditable(false);
+            textArea.setCaretPosition(0);
+
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            scrollPane.setPreferredSize(new Dimension(700, 300));
+
+            JOptionPane.showMessageDialog(frame, scrollPane, "Client List", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }
-
-

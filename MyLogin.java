@@ -1,3 +1,5 @@
+//Log in button where in you can enter your username and password
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -29,17 +31,18 @@ public class MyLogin implements ActionListener {
         panel.setBounds(-7, -20, 400,300);
         panel.setLayout(null);
 
+        //Username and Password
         Username = new JTextField();
         Username.setBounds(50, 75, 250, 40);
-        Username.setText("admin");
+        Username.setText("");
         Username.setVisible(true);
 
         Pass = new JPasswordField();
         Pass.setBounds(50, 130, 250, 40);
-        Pass.setText("admin123");
+        Pass.setText("");
         Pass.setVisible(true);
 
-        //Password 
+        //Password icon toggle
         ImageIcon eyeIcon = new ImageIcon(
         new ImageIcon("Visibility.png")
             .getImage().getScaledInstance(24, 24, Image.SCALE_AREA_AVERAGING)
@@ -85,10 +88,6 @@ public class MyLogin implements ActionListener {
         submit.addActionListener(this);
         submit.setBounds(50, 180, 100, 40);
 
-//        label.setBounds(0,0,200,50);
-//        label.setFont(new Font("Alice",Font.PLAIN,25));
-//
-//        frame.add(label);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
         frame.setSize(350, 260);
@@ -114,6 +113,7 @@ public class MyLogin implements ActionListener {
 
 
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {

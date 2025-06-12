@@ -1,3 +1,5 @@
+// Child Class Dog extending Animal
+
 import java.time.LocalDate;
 
 public class Dog extends Animal {

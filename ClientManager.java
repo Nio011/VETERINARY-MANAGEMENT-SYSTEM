@@ -1,12 +1,17 @@
+//This is for managing clients in a system 
+// It includes methods for adding, viewing, editing, deleting, and searching clients.
+
 import java.io.*;
 import java.util.*;
 
 public class ClientManager implements AdminActions {
 
-    private Scanner sc;
-    public static final List<Client> clients = new ArrayList<>();
+    private Scanner sc; // Scanner for user input
+    public static final List<Client> clients = new ArrayList<>(); // List to store clients
+    // Static variable to keep track of the last assigned client ID
+    // This variable is used to generate unique client IDs
     private static int lastId = 0;
-    public static Client lastAddedClient;
+    public static Client lastAddedClient; 
 
 
     // Static block to load clients from file on class load
@@ -18,11 +23,12 @@ public class ClientManager implements AdminActions {
         }
     }
 
+
     public ClientManager() {
         this.sc = new Scanner(System.in);
     }
 
-    // Check if a client is registered by ID
+    // Check if a client is registered by ID in AnimalManager Class
     public boolean isClientRegistered(String clientId) {
         for (Client c : clients) {
             if (c.getId().equals(clientId)) {
@@ -46,7 +52,7 @@ public class ClientManager implements AdminActions {
         return null;
     }
 
-    private static void loadClientsFromFile() throws IOException {
+    private static void loadClientsFromFile() throws IOException { //loading clients method
         clients.clear();
         lastId = 0;
 
@@ -81,12 +87,12 @@ public class ClientManager implements AdminActions {
         }
     }
 
-    public static String generateClientId() {
+    public static String generateClientId() { //Generating a unique client ID
         lastId++;
         return String.format("CLT%03d", lastId);
     }
 
-    public static void saveClient(Client client) {
+    public static void saveClient(Client client) { //Saving client to file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("ListofClients.txt", true))) {
             writer.write(client.toFileString());
             writer.newLine();
@@ -95,7 +101,7 @@ public class ClientManager implements AdminActions {
         }
     }
 
-    public static void overwriteFile() {
+    public static void overwriteFile() { //for editing client's info in this class
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("ListofClients.txt"))) {
             for (Client client : clients) {
                 writer.write(client.toFileString());
@@ -104,17 +110,8 @@ public class ClientManager implements AdminActions {
         } catch (IOException e) {
             System.out.println("An unexpected error occurred during file overwrite: " + e.getMessage());
         }
-    } //Duplicate method, use saveAllClientsToFile instead 
-    
+    } //Duplicate method of saveAllClientsToFIle for frontend
 
-    public static Client findClientByName(String name) {
-        for (Client client : clients) {
-            if (client.getName().equalsIgnoreCase(name.trim())) {
-                return client;
-            }
-        }
-        return null;
-    }
     public static Client findClientbyId(String id) {
         for (Client client : clients) {
             if (client.getId().equalsIgnoreCase(id.trim())) {
@@ -135,19 +132,7 @@ public class ClientManager implements AdminActions {
         }
         return null; // Client not found
     }
-    public static Client updateClientById(String newName, String newEmail, String newContactNum, String id) {
-        for (int i = 0; i < clients.size(); i++) {
-            Client client = clients.get(i);
-            if (client.getId().equalsIgnoreCase(id.trim())) {
-                // Update the client details
-                Client updatedClient = new Client(client.getId(), newName, newEmail, newContactNum);
-                clients.set(i, updatedClient);
-                overwriteFile();
-                return updatedClient; // Return the updated client
-            }
-        }
-        return null; // Client not found
-    }
+    
     public static Client saveAllClientsToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("ListofClients.txt"))) {
             for (Client client : clients) {
@@ -160,7 +145,8 @@ public class ClientManager implements AdminActions {
             return null; // Return null if an error occurs
         }
     }
-    public static String reloadClientsFromFile() {
+    public static String reloadClientsFromFile() {  //Used in MyClients and MyDahsboard
+        clients.clear();
         try {
             loadClientsFromFile();
             return "Clients reloaded successfully.";

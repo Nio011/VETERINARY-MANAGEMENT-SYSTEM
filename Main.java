@@ -1,3 +1,5 @@
+//Main Method to run the program
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;

@@ -1,3 +1,5 @@
+//All the methods for managing appointments, including adding, editing, deleting, searching, and viewing appointments.
+
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,28 +11,28 @@ public class AppointmentManager implements AdminActions {
     Scanner scanner = new Scanner(System.in);
     static int lastAppId; // For appointments unique ID (to edit the appointment)
 
-    // Generate Appointment ID
-    public static String generateAppointmentId() { // eto pag gegenerate na ng Appointment ID
-        lastAppId++; // Increment lang kunwari 001 yung last nung nauna magiging 002 yung susunod
-        return String.format("APT%03d", lastAppId);
-    }
-
+    // List to hold all appointments
     public static List<Appointment> appointments = new ArrayList<>();
 
     // Static block to load appointments from file on class load
     static {
         try {
-            loadAppointmentsFromFile(); // for automatic loading of appointments from the file
+            loadAppointmentsFromFile();
         } catch (IOException e) {
             System.out.println("An unexpected error occured. Could not load appointments at the moment " + e.getMessage());
         }
     }
 
+    // Generate Appointment ID
+    public static String generateAppointmentId() {
+        lastAppId++;
+        return String.format("APT%03d", lastAppId);
+    }
+
     // Load appointments from file
     public static void loadAppointmentsFromFile() throws IOException {
         appointments.clear();
-        int maxId = 0; // Track the highest ID and change follows it. Fixed the Id generation logic
-        // Load appointments from file
+        int maxId = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader("appointments.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -46,7 +48,6 @@ public class AppointmentManager implements AdminActions {
 
                     appointments.add(new Appointment(id, name, species, date, appTime, contactNum, reason));
 
-                    // Extract numeric part of ID and update maxId 
                     if (id.startsWith("APT")) {
                         try {
                             int num = Integer.parseInt(id.substring(3));
@@ -62,7 +63,7 @@ public class AppointmentManager implements AdminActions {
     }
 
     // Save all appointments to file (overwrite)
-    private static void overwriteFile() { // Para maupdate yung information
+    private static void overwriteFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("appointments.txt"))) {
             for (Appointment appointment : appointments) {
                 writer.write(appointment.toFileString());
@@ -103,24 +104,71 @@ public class AppointmentManager implements AdminActions {
         return null;
     }
 
-    // Input helpers
-    private static String inputContactNumber(Scanner scanner) {
-        String contactNum;
-        while (true) {
-            System.out.print("Enter Contact Number (11 digits): ");
-            contactNum = scanner.nextLine().trim();
-            if (contactNum.matches("\\d{11}")) {
-                return contactNum;
-            } else {
-                System.out.println("Invalid contact number. Must be exactly 11 digits.");
+    // Find appointment by Appointment ID or Client ID
+    public static String findAppointmentByIdOrClientId(String searchId) {
+        for (Appointment appointment : appointments) {
+            if (appointment.getId().equalsIgnoreCase(searchId) ||
+                (appointment.getClientId() != null && appointment.getClientId().equalsIgnoreCase(searchId))) {
+                return appointment.toFileString();
             }
         }
+        return null;
     }
+
+    // Read all appointments as strings from file
+    public static List<String> readAppointmentsFromFile() {
+        List<String> appointmentList = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("appointments.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                appointmentList.add(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading appointments file: " + e.getMessage());
+        }
+        return appointmentList;
+    }
+
+    // Write a list of Appointment objects to file
+    public static void writeAppointmentsToFile(List<Appointment> appointmentObjects) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("appointments.txt"))) {
+            for (Appointment appointment : appointmentObjects) {
+                writer.write(appointment.toFileString());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing appointments to file: " + e.getMessage());
+        }
+    }
+
+    // Delete appointment by Appointment ID or Client ID
+    public static boolean deleteAppointmentByIdOrClientId(String deleteId) {
+        boolean found = false;
+        Iterator<Appointment> iterator = appointments.iterator();
+
+        while (iterator.hasNext()) {
+            Appointment appointment = iterator.next();
+            if (appointment.getId().equalsIgnoreCase(deleteId) ||
+                (appointment.getClientId() != null && appointment.getClientId().equalsIgnoreCase(deleteId))) {
+                iterator.remove();
+                found = true;
+                System.out.println("Appointment with ID " + deleteId + " deleted successfully.");
+                overwriteFile();
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No appointment found with ID or Client ID: " + deleteId);
+        }
+        return found;
+    }
+// Input methods for appointment details
 
     private static String inputAppointmentDate(Scanner scanner) {
         while (true) {
             try {
-                System.out.print("Enter Appointment Date (YYYY-MM-DD): ");
+                System.out.print("Enter Appointment Date (MM/DD/YYYY): ");
                 String date = scanner.nextLine().trim();
                 LocalDate enteredDate = LocalDate.parse(date);
                 if (enteredDate.isBefore(LocalDate.now())) {
@@ -129,7 +177,7 @@ public class AppointmentManager implements AdminActions {
                     return date;
                 }
             } catch (DateTimeParseException e) {
-                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+                System.out.println("Invalid date format. Please use MM/DD/YYYY.");
             }
         }
     }
@@ -157,12 +205,12 @@ public class AppointmentManager implements AdminActions {
                     return time;
                 }
             } catch (DateTimeParseException e) {
-                System.out.println("Invalid time format. Please use hh:mm AM/PM (e.g., 08:00 AM, 02:30 PM).");
+                System.out.println("Invalid time format. Please use hh:mm AM/PM (e.g., 8:00 AM, 2:30 PM).");
             }
         }
     }
 
-    // Helper for species validation
+    //species validation
     private String inputSpecies() {
         while (true) {
             System.out.print("Enter Species: ");
@@ -175,7 +223,7 @@ public class AppointmentManager implements AdminActions {
         }
     }
 
-    // Helper for contact number validation
+    // contact number validation
     private String inputContactNumber() {
         while (true) {
             System.out.print("Enter Contact Number (11 digits): ");
@@ -221,7 +269,6 @@ public class AppointmentManager implements AdminActions {
                 System.out.println("Name: " + name);
                 System.out.println("Contact Number: " + contactNum);
 
-                // Use helper for species validation
                 species = inputSpecies();
 
             } else {
@@ -271,7 +318,6 @@ public class AppointmentManager implements AdminActions {
                 System.out.print("New Time (hh:mm AM/PM): ");
                 String newAppTime = scanner.nextLine().trim();
 
-                // Update only if not empty
                 if (!newDate.isEmpty()) appointment.setDate(newDate);
                 if (!newAppTime.isEmpty()) appointment.setAppTime(newAppTime);
 
@@ -360,4 +406,3 @@ public class AppointmentManager implements AdminActions {
         System.out.println("===============================================");
     }
 }
-

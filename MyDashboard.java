@@ -1,7 +1,10 @@
+//This class is the main dahsboard where you can view the total number of clients and appointments, and navigate to other sections of the application.
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 
 public class MyDashboard implements ActionListener {
     JFrame frame = new JFrame();
@@ -57,6 +60,23 @@ public class MyDashboard implements ActionListener {
         appointmentLabel.setForeground(Color.BLACK);
         appointmentLabel.setBounds(30, 80, 200, 40);
         AppointmentPanel.add(appointmentLabel);
+
+        //Method for real time updates of client and appointment numbers in the dashboard
+        javax.swing.Timer counterTimer = new javax.swing.Timer(1000, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                ClientManager.reloadClientsFromFile();
+                AppointmentManager.loadAppointmentsFromFile();
+            } catch (Exception ex) {
+                // Optionally handle error
+            }
+            clientNumber.setText(String.valueOf(ClientManager.clients.size()));
+            appointmentNumber.setText(String.valueOf(AppointmentManager.appointments.size()));
+        }
+    });
+counterTimer.setRepeats(true);
+counterTimer.start();
 
         // Time Label
         nTime = new JLabel();
@@ -241,7 +261,7 @@ public class MyDashboard implements ActionListener {
         }
         if (e.getSource() == pas) {
             frame.dispose();
-            MyProductsServices myProductsServices = new MyProductsServices();
+            MyVetServices myVetServices = new MyVetServices();
         }
         if (e.getSource() == alls) {
             frame.dispose();

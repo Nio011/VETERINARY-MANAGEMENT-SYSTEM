@@ -1,3 +1,5 @@
+// Description: This class manages animal records, allowing for addition, viewing, editing, deletion, and searching of animals.
+
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -8,16 +10,21 @@ import java.util.Scanner;
 public class AnimalManager implements AdminActions{
     
     private Scanner sc;
-    private static List<Animal> animals = new ArrayList<>();
+    public static List<Animal> animals = new ArrayList<>();
     public static String filename = "animals.txt";
     public ClientManager clientManager;
 
     public AnimalManager(Scanner sc, ClientManager cm) {
         this.sc = sc;
         this.clientManager = cm;
+    }
+
+    static {
         loadFromFile();
     }
 
+    //Method to add a new animal
+    @Override
     public void add() {
     String clientId;
     String clientName;
@@ -52,8 +59,10 @@ public class AnimalManager implements AdminActions{
             break;  
         }
     }
-    
-    System.out.println("Client Name: " + clientName);
+
+    // Code block for getting animal details 
+        System.out.println("Client ID: " + clientId);
+        System.out.println("Client Name: " + clientName);
 
         System.out.print("Enter Pet Name: ");
         String petName = sc.nextLine().trim();
@@ -100,6 +109,8 @@ public class AnimalManager implements AdminActions{
         saveToFile();
     }
 
+    //Method to view all animals
+    @Override
     public void viewAll() {
         if (animals.isEmpty()) {
             System.out.println("No animals to display.");
@@ -111,6 +122,8 @@ public class AnimalManager implements AdminActions{
         }
     }
 
+    //Method for editing an animal's details
+    @Override
     public void edit() {
         System.out.print("Enter Client ID to update: ");
         String clientId = sc.nextLine().trim();
@@ -168,6 +181,8 @@ public class AnimalManager implements AdminActions{
         saveToFile();
     }
 
+    //Method to delete an animal by Client ID
+    @Override
     public void delete() {
         System.out.print("Enter Client ID to delete: ");
         String clientId = sc.nextLine().trim();
@@ -183,6 +198,7 @@ public class AnimalManager implements AdminActions{
         saveToFile();
     }
 
+        //If an animal is deleted, the client will also be deleted
         public static String deleteAnimalbyClientid(String clientId) {
         boolean found = false;
 
@@ -191,13 +207,23 @@ public class AnimalManager implements AdminActions{
 
         if (found) {
             saveToFile();
-            return "All animals for Client ID " + clientId + " have been deleted.";
+            // Delete the client as well
+            ClientManager.deleteClientById(clientId);
+            return "All animals and the client for Client ID " + clientId + " have been deleted.";
         } else {
             return "No animals found for Client ID " + clientId + ".";
         }
     }
 
-    public static Animal findAnimalByClientId(String clientId) {
+    public static Animal findAnimalByClientId(String clientId) { //finding an animal by Client ID
+        if (clientId == null || clientId.isEmpty()) {
+            return null; // Return null if clientId is null or empty
+        }
+        if (animals.isEmpty()) {
+            return null; // Return null if the list is empty
+        }
+        // Using enhanced for loop to find the animal
+        clientId = clientId.trim(); // Trim whitespace from clientId
         for (Animal a : animals) {
             if (a.getId().equalsIgnoreCase(clientId)) {
                 return a;
@@ -206,7 +232,8 @@ public class AnimalManager implements AdminActions{
         return null;
     }
 
-    public static void saveToFile() {
+//Method to save the list of animals to a file
+    public static void saveToFile() { 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (Animal a : animals) {
               
@@ -224,6 +251,8 @@ public class AnimalManager implements AdminActions{
         }
     }
 
+    //Searching an animal by Client ID
+    @Override
     public void search(){
         System.out.println("Enter Client ID to search");
         String clientId = sc.nextLine().trim();
@@ -235,7 +264,8 @@ public class AnimalManager implements AdminActions{
             System.out.println("Animal found: " + animal.toFileString());
         }
     }
-
+    
+    // Method to load animals from a file
     public static void loadFromFile() {
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;

@@ -1,3 +1,5 @@
+//This class manages all sales records, allowing viewing and searching through them.
+
 import java.io.*;
 import java.util.*;
 
@@ -33,7 +35,8 @@ public class AllSalesManager {
         }
     }
 
-    public static void searchSales(String query) {
+    //Searches sales records based on Client Id and display all the transactions related to the ID
+    public static void searchSales(String query) { 
         List<String> sales = loadAllSales();
         boolean found = false;
         System.out.println("\n--- SEARCH RESULTS ---");

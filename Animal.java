@@ -1,3 +1,5 @@
+//Parent class for all animals in the system
+
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -28,14 +30,22 @@ public abstract class Animal {
     public String getBreed() { return breed; }
     public LocalDate getDateOfBirth() { return dateOfBirth; }
     public double getWeight() { return weight; }
+    public String getClientId() { return id.substring(0, 3); }
+    public String getOwnerId() { return id.substring(3, 6); }
 
     // Setters
     public void setName(String name) { this.name = name; }
     public void setPetName(String petName) { this.petName = petName; }
-    public void setSpecies(String species) { this.species = species; }
     public void setBreed(String breed) { this.breed = breed; }
     public void setDateOfBirth(LocalDate dob) { this.dateOfBirth = dob; }
     public void setWeight(double weight) { this.weight = weight; }
+    public String setSpecies(String species) {
+        this.species = species;
+        return species;
+    }
+
+    // Method for calcuating age using the date of birth
+    // Returns the age in years and months
 
     public String getAge() {
         LocalDate now = LocalDate.now();
